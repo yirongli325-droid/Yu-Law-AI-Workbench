@@ -41,15 +41,24 @@ test("server-renders the workbench homepage and approved tools", async () => {
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape|codex-preview/i);
 });
 
-test("local professional skills show an honest Codex handoff", async () => {
+test("PE/VC review skill is deployed with lawyer confirmation and GitHub source", async () => {
   const response = await render("/tools/pe-vc-financing-doc-review");
   assert.equal(response.status, 200);
 
   const html = await response.text();
   assert.match(html, /PE\/VC 融资交易文件审阅/);
-  assert.match(html, /重大问题清单/);
+  assert.match(html, /v0\.1\.16/);
+  assert.match(html, /\$pe-vc-transaction-docs-review/);
+  assert.match(html, /Word《审阅关注点确认单》/);
+  assert.match(html, /事实问题与法律分析/);
+  assert.match(html, /律师确认后的最终 Word 审查报告/);
   assert.match(html, /跨文件一致性检查/);
   assert.match(html, /通过本地 Codex 调用/);
+  assert.match(html, /安装 \/ 查看 GitHub/);
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/zhy1126\/PE-VC-Financing-Agreement-Review\/tree\/main\/pe-vc-transaction-docs-review"/,
+  );
   assert.doesNotMatch(html, /href="http:\/\/127\.0\.0\.1:8765/);
 });
 

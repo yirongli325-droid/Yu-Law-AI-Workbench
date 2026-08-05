@@ -42,11 +42,23 @@ const expectedTools = [
     name: "PE/VC 融资交易文件审阅",
     category: "专业法律分析",
     status: "local-skill",
-    version: "本机 Skill",
-    repository: null,
+    version: "v0.1.16（本机 Skill）",
+    repository:
+      "https://github.com/zhy1126/PE-VC-Financing-Agreement-Review/tree/main/pe-vc-transaction-docs-review",
     localUrl: null,
-    inputs: ["交易架构与委托方立场", "Term Sheet / SPA / SHA / 章程等文件", "文件版本与修改轮次", "重点关注事项"],
-    outputs: ["重大问题清单", "逐条修改建议", "修订稿 / 红线版", "跨文件一致性检查"],
+    inputs: [
+      "交易架构与委托方立场",
+      "Term Sheet / SPA / SHA / 章程等文件",
+      "当前版本、上一版及既有问题清单",
+      "项目事实、审阅偏好与重点关注事项",
+    ],
+    outputs: [
+      "问题清单与 Major Issue List",
+      "Word《审阅关注点确认单》",
+      "逐条修改建议、批注或红线稿",
+      "多轮响应矩阵与跨文件一致性检查",
+      "律师确认后的最终 Word 审查报告",
+    ],
   },
   {
     id: "basic-work-skills",

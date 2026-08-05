@@ -93,14 +93,31 @@
     "name": "PE/VC 融资交易文件审阅",
     "category": "专业法律分析",
     "status": "local-skill",
-    "summary": "审阅未上市公司股权融资交易文件，识别重大条款、跨文件冲突并形成谈判建议。",
-    "version": "本机 Skill",
-    "repository": null,
+    "summary": "审阅未上市公司股权融资文件，覆盖首轮审阅、多轮红线、跨文件冲突和市场惯例，并在律师确认后生成最终报告。",
+    "version": "v0.1.16（本机 Skill）",
+    "repository": "https://github.com/zhy1126/PE-VC-Financing-Agreement-Review/tree/main/pe-vc-transaction-docs-review",
     "localUrl": null,
-    "inputs": ["交易架构与委托方立场", "Term Sheet / SPA / SHA / 章程等文件", "文件版本与修改轮次", "重点关注事项"],
-    "outputs": ["重大问题清单", "逐条修改建议", "修订稿 / 红线版", "跨文件一致性检查"],
-    "steps": ["确认交易架构与审阅立场", "整理本轮文件及版本基线", "识别重大问题与跨文件冲突", "由律师确认谈判策略和修订文本"],
-    "notice": "适用于未上市公司股权融资交易文件；税务、会计、境外法及商业判断由相应专业人士确认。"
+    "inputs": [
+      "交易架构与委托方立场",
+      "Term Sheet / SPA / SHA / 章程等文件",
+      "当前版本、上一版及既有问题清单",
+      "项目事实、审阅偏好与重点关注事项"
+    ],
+    "outputs": [
+      "问题清单与 Major Issue List",
+      "Word《审阅关注点确认单》",
+      "逐条修改建议、批注或红线稿",
+      "多轮响应矩阵与跨文件一致性检查",
+      "律师确认后的最终 Word 审查报告"
+    ],
+    "steps": [
+      "在本地 Codex 中调用 $pe-vc-transaction-docs-review",
+      "上传交易文件并说明立场、架构、版本基线和交付方式",
+      "完成初审并生成事实问题与法律分析两类 Word 确认单",
+      "由律师逐项或批量填写确认、调整、删除或待核验意见",
+      "通过确认与 Word QA 后生成最终报告、批注或红线成果"
+    ],
+    "notice": "最终完整报告、首次实质红线或根据审阅意见实施实质修改，必须先取得有效律师确认；确认前只能标记为初步或草稿。境外法、税务、会计及商业判断由相应专业人士确认。"
   },
   {
     "id": "transaction-structure-planning",

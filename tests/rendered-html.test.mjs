@@ -34,7 +34,7 @@ test("server-renders the workbench homepage and approved tools", async () => {
   assert.match(html, /本地律师材料脱敏/);
   assert.match(html, /法律服务建议书/);
   assert.match(html, /PE\/VC 融资交易文件审阅/);
-  assert.match(html, /投资并购方案规划/);
+  assert.match(html, /中国并购交易结构方案规划/);
   assert.match(html, /href="\/tools\/local-legal-redaction"/);
   assert.match(html, /本入口不会上传客户文件/);
   assert.doesNotMatch(html, /<input[^>]+type=["']file["']/i);
@@ -51,6 +51,24 @@ test("local professional skills show an honest Codex handoff", async () => {
   assert.match(html, /跨文件一致性检查/);
   assert.match(html, /通过本地 Codex 调用/);
   assert.doesNotMatch(html, /href="http:\/\/127\.0\.0\.1:8765/);
+});
+
+test("M&A planning skill is deployed with its local invocation and GitHub source", async () => {
+  const response = await render("/tools/transaction-structure-planning");
+  assert.equal(response.status, 200);
+
+  const html = await response.text();
+  assert.match(html, /中国并购交易结构方案规划/);
+  assert.match(html, /\$handling-china-ma-transactions/);
+  assert.match(html, /控制权、收购方式、合并财务报表/);
+  assert.match(html, /管理层决策版与律师执行版/);
+  assert.match(html, /尽调、交易文件、审批、会计四类任务包/);
+  assert.match(html, /通过本地 Codex 调用/);
+  assert.match(html, /安装 \/ 查看 GitHub/);
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/zhy1126\/Cross-border-M-and-A-Investment\/tree\/main\/skills\/handling-china-ma-transactions"/,
+  );
 });
 
 test("homepage exposes accessible navigation, filters, and tool landmarks", async () => {

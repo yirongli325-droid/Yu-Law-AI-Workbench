@@ -105,14 +105,29 @@ const expectedTools = [
   },
   {
     id: "transaction-structure-planning",
-    name: "投资并购方案规划",
+    name: "中国并购交易结构方案规划",
     category: "专业法律分析",
     status: "local-skill",
-    version: "本机 Skill",
-    repository: null,
+    version: "main（本机 Skill）",
+    repository:
+      "https://github.com/zhy1126/Cross-border-M-and-A-Investment/tree/main/skills/handling-china-ma-transactions",
     localUrl: null,
-    inputs: ["商业目标", "交易事实", "硬约束", "材料与缺口"],
-    outputs: ["推荐方案", "备选方案", "待确认事项", "后续任务包"],
+    inputs: [
+      "事项信息（阶段、立场、法域、基准日与保密等级）",
+      "商业目标（控制目标、并表目标、预算与期限）",
+      "交易事实（股权、表决权、治理、标的与交易对方）",
+      "可选路径（股权、增资、资产、分步或间接收购）",
+      "硬约束（审批、资金、时间、税务、国资、外资与数据）",
+      "材料与缺口（版本、未确认事实、责任人与关闭证据）",
+    ],
+    outputs: [
+      "项目状态与一页式方案结论",
+      "三维目标及基准、备选、兜底方案比较",
+      "推荐方案、成立条件、关键反证与待决策事项",
+      "签署至控制取得及并表判断时间线",
+      "管理层决策版与律师执行版",
+      "尽调、交易文件、审批、会计四类任务包",
+    ],
   },
 ];
 

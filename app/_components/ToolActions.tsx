@@ -19,6 +19,11 @@ export function ToolActions({ localUrl, repository, status, compact = false }: T
 
   return (
     <div className={`tool-actions${compact ? " tool-actions-compact" : ""}`}>
+      {status === "local-skill" ? (
+        <span className="unavailable-action" aria-label="工具接入状态">
+          通过本地 Codex 调用
+        </span>
+      ) : null}
       {localUrl ? (
         <a className="action action-primary" href={localUrl}>
           打开本地工具

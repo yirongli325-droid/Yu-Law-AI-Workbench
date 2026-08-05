@@ -29,6 +29,8 @@ const expectedTools = [
     category: "基础工作",
     status: "planned",
     version: "v0.1.0",
+    repository: null,
+    localUrl: null,
     inputs: ["任务说明", "待处理材料"],
     outputs: ["结构化结果", "待确认事项"],
   },
@@ -38,6 +40,8 @@ const expectedTools = [
     category: "文书制作",
     status: "building",
     version: "v0.1.0",
+    repository: null,
+    localUrl: null,
     inputs: ["批准模板", "项目资料", "律师信息", "案例信息"],
     outputs: ["建议书初稿", "检查清单", "待确认项"],
   },
@@ -47,6 +51,8 @@ const expectedTools = [
     category: "文书制作",
     status: "planned",
     version: "v0.1.0",
+    repository: null,
+    localUrl: null,
     inputs: ["客户信息", "服务范围", "计费方案"],
     outputs: ["报价函初稿", "费用核对表"],
   },
@@ -56,6 +62,8 @@ const expectedTools = [
     category: "文书制作",
     status: "planned",
     version: "v0.1.0",
+    repository: null,
+    localUrl: null,
     inputs: ["招标文件", "响应模板", "团队与案例"],
     outputs: ["响应文件初稿", "偏离表", "缺件清单"],
   },
@@ -65,6 +73,8 @@ const expectedTools = [
     category: "文书制作",
     status: "planned",
     version: "v0.1.0",
+    repository: null,
+    localUrl: null,
     inputs: ["合同模板家族", "项目字段", "商务条件"],
     outputs: ["合同初稿", "偏离项", "待确认问题"],
   },
@@ -119,8 +129,8 @@ test("defines exactly the approved versioned tools", () => {
       category,
       status,
       version,
-      ...(repository !== undefined ? { repository } : {}),
-      ...(localUrl !== undefined ? { localUrl } : {}),
+      repository,
+      localUrl,
       inputs,
       outputs,
       ...(id === "local-legal-redaction" ? { steps, notice } : {}),
@@ -165,10 +175,17 @@ test("keeps every tool record safe, complete, and displayable", () => {
     assert.ok(!Object.hasOwn(tool, "command"), `${tool.id} must not contain command`);
     assert.ok(!Object.hasOwn(tool, "script"), `${tool.id} must not contain script`);
 
-    if (tool.repository !== undefined && tool.repository !== null) {
+    for (const field of ["repository", "localUrl"]) {
+      assert.ok(Object.hasOwn(tool, field), `${tool.id}.${field} must be explicit`);
+      assert.ok(
+        tool[field] === null || typeof tool[field] === "string",
+        `${tool.id}.${field} must be a string or null`,
+      );
+    }
+    if (tool.repository !== null) {
       assert.match(tool.repository, /^https:\/\/github\.com\//);
     }
-    if (tool.localUrl !== undefined && tool.localUrl !== null) {
+    if (tool.localUrl !== null) {
       assert.match(tool.localUrl, /^http:\/\/127\.0\.0\.1:\d+(?:\/|$)/);
     }
   }

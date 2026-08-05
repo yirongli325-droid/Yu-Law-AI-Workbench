@@ -20,8 +20,8 @@ export type ToolRecord = {
   status: ToolStatus;
   summary: string;
   version: string;
-  repository?: string | null;
-  localUrl?: string | null;
+  repository: string | null;
+  localUrl: string | null;
   inputs: string[];
   outputs: string[];
   steps: string[];

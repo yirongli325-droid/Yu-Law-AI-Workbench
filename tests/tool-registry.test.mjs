@@ -2,6 +2,20 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 const registry = await import("../lib/tool-registry.ts");
+const allowedRecordKeys = [
+  "id",
+  "name",
+  "category",
+  "summary",
+  "status",
+  "version",
+  "repository",
+  "localUrl",
+  "inputs",
+  "outputs",
+  "steps",
+  "notice",
+].sort();
 
 const expectedTools = [
   {
@@ -108,7 +122,7 @@ test("exports the supported category and status filters", () => {
   ]);
 });
 
-test("defines exactly the approved versioned tools", () => {
+test("defines approved tool identities and integration details", () => {
   assert.equal(registry.tools.length, 7);
   assert.deepEqual(
     registry.tools.map(({
@@ -152,6 +166,8 @@ test("keeps every tool record safe, complete, and displayable", () => {
   ]);
   const ids = new Set();
 
+  assert.ok(Object.isFrozen(registry.tools), "validated tools must be frozen");
+
   for (const tool of registry.tools) {
     assert.match(tool.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
     assert.ok(!ids.has(tool.id), `duplicate tool ID: ${tool.id}`);
@@ -172,8 +188,11 @@ test("keeps every tool record safe, complete, and displayable", () => {
       );
     }
 
-    assert.ok(!Object.hasOwn(tool, "command"), `${tool.id} must not contain command`);
-    assert.ok(!Object.hasOwn(tool, "script"), `${tool.id} must not contain script`);
+    assert.deepEqual(
+      Object.keys(tool).sort(),
+      allowedRecordKeys,
+      `${tool.id} must use only the allowlisted metadata keys`,
+    );
 
     for (const field of ["repository", "localUrl"]) {
       assert.ok(Object.hasOwn(tool, field), `${tool.id}.${field} must be explicit`);
@@ -183,11 +202,43 @@ test("keeps every tool record safe, complete, and displayable", () => {
       );
     }
     if (tool.repository !== null) {
-      assert.match(tool.repository, /^https:\/\/github\.com\//);
+      const repositoryUrl = new URL(tool.repository);
+      assert.equal(repositoryUrl.protocol, "https:");
+      assert.equal(repositoryUrl.hostname, "github.com");
+      assert.equal(repositoryUrl.username, "");
+      assert.equal(repositoryUrl.password, "");
+      assert.ok(
+        repositoryUrl.pathname.split("/").filter(Boolean).length >= 2,
+        `${tool.id}.repository must include an owner and repository`,
+      );
     }
     if (tool.localUrl !== null) {
-      assert.match(tool.localUrl, /^http:\/\/127\.0\.0\.1:\d+(?:\/|$)/);
+      const localUrl = new URL(tool.localUrl);
+      const port = Number(localUrl.port);
+      assert.equal(localUrl.protocol, "http:");
+      assert.equal(localUrl.hostname, "127.0.0.1");
+      assert.equal(localUrl.username, "");
+      assert.equal(localUrl.password, "");
+      assert.ok(Number.isInteger(port) && port >= 1 && port <= 65535);
     }
+  }
+});
+
+test("rejects unknown or unsafe metadata during registry validation", () => {
+  assert.equal(typeof registry.validateToolRecords, "function");
+
+  const [firstTool] = registry.tools;
+  const invalidRecords = [
+    [{ ...firstTool, shell: "open terminal" }],
+    [{ ...firstTool, category: "全部工具" }],
+    [{ ...firstTool, status: "experimental" }],
+    [{ ...firstTool, repository: "https://github.com@not-github.example/org/repo" }],
+    [{ ...firstTool, localUrl: "http://127.0.0.1:0" }],
+    [{ ...firstTool, inputs: ["safe", 42] }],
+  ];
+
+  for (const invalidTools of invalidRecords) {
+    assert.throws(() => registry.validateToolRecords(invalidTools));
   }
 });
 

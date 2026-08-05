@@ -1,0 +1,180 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+const registry = await import("../lib/tool-registry.ts");
+
+const expectedTools = [
+  {
+    id: "local-legal-redaction",
+    name: "本地律师材料脱敏",
+    category: "数据安全",
+    status: "connected",
+    version: "feat/legal-redaction-mvp",
+    repository:
+      "https://github.com/zhy1126/Local-LLM-based-Legal-Document-De-identification-System/tree/feat/legal-redaction-mvp",
+    localUrl: "http://127.0.0.1:8501",
+    inputs: ["TXT", "DOCX", "PDF"],
+    outputs: ["脱敏文本", "简洁 DOCX", "风险报告", "完整结果包"],
+    steps: [
+      "确认本机已安装工具",
+      "打开本地页面并选择材料",
+      "检查识别结果",
+      "下载并由律师复核",
+    ],
+    notice: "原始材料和映射仅在本机处理，输出须由律师复核。",
+  },
+  {
+    id: "basic-work-skills",
+    name: "基础工作 Skill",
+    category: "基础工作",
+    status: "planned",
+    version: "v0.1.0",
+    inputs: ["任务说明", "待处理材料"],
+    outputs: ["结构化结果", "待确认事项"],
+  },
+  {
+    id: "legal-service-proposal",
+    name: "法律服务建议书",
+    category: "文书制作",
+    status: "building",
+    version: "v0.1.0",
+    inputs: ["批准模板", "项目资料", "律师信息", "案例信息"],
+    outputs: ["建议书初稿", "检查清单", "待确认项"],
+  },
+  {
+    id: "quotation-letter",
+    name: "报价函",
+    category: "文书制作",
+    status: "planned",
+    version: "v0.1.0",
+    inputs: ["客户信息", "服务范围", "计费方案"],
+    outputs: ["报价函初稿", "费用核对表"],
+  },
+  {
+    id: "tender-response",
+    name: "标书 / 响应文件",
+    category: "文书制作",
+    status: "planned",
+    version: "v0.1.0",
+    inputs: ["招标文件", "响应模板", "团队与案例"],
+    outputs: ["响应文件初稿", "偏离表", "缺件清单"],
+  },
+  {
+    id: "contract-drafting",
+    name: "合同制作",
+    category: "文书制作",
+    status: "planned",
+    version: "v0.1.0",
+    inputs: ["合同模板家族", "项目字段", "商务条件"],
+    outputs: ["合同初稿", "偏离项", "待确认问题"],
+  },
+  {
+    id: "transaction-structure-planning",
+    name: "交易结构方案规划",
+    category: "专业法律分析",
+    status: "installable",
+    version: "v0.1.0",
+    repository: null,
+    localUrl:
+      "http://127.0.0.1:8765/launch/transaction-structure-planning",
+    inputs: ["商业目标", "交易事实", "硬约束", "材料与缺口"],
+    outputs: ["推荐方案", "备选方案", "待确认事项", "后续任务包"],
+  },
+];
+
+test("exports the supported category and status filters", () => {
+  assert.deepEqual(registry.categories, [
+    "全部工具",
+    "数据安全",
+    "基础工作",
+    "文书制作",
+    "专业法律分析",
+  ]);
+  assert.deepEqual(registry.statuses, [
+    "connected",
+    "installable",
+    "planned",
+    "building",
+  ]);
+});
+
+test("defines exactly the approved versioned tools", () => {
+  assert.equal(registry.tools.length, 7);
+  assert.deepEqual(
+    registry.tools.map(({
+      id,
+      name,
+      category,
+      status,
+      version,
+      repository,
+      localUrl,
+      inputs,
+      outputs,
+      steps,
+      notice,
+    }) => ({
+      id,
+      name,
+      category,
+      status,
+      version,
+      ...(repository !== undefined ? { repository } : {}),
+      ...(localUrl !== undefined ? { localUrl } : {}),
+      inputs,
+      outputs,
+      ...(id === "local-legal-redaction" ? { steps, notice } : {}),
+    })),
+    expectedTools,
+  );
+  assert.equal(
+    registry.getTool("legal-service-proposal")?.notice,
+    "仅可使用已批准的内容库。",
+  );
+});
+
+test("keeps every tool record safe, complete, and displayable", () => {
+  const allowedStatuses = new Set([
+    "connected",
+    "installable",
+    "planned",
+    "building",
+  ]);
+  const ids = new Set();
+
+  for (const tool of registry.tools) {
+    assert.match(tool.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    assert.ok(!ids.has(tool.id), `duplicate tool ID: ${tool.id}`);
+    ids.add(tool.id);
+
+    for (const field of ["name", "category", "summary", "version", "notice"]) {
+      assert.equal(typeof tool[field], "string", `${tool.id}.${field} must be a string`);
+      assert.ok(tool[field].trim(), `${tool.id}.${field} must not be empty`);
+    }
+    assert.ok(allowedStatuses.has(tool.status), `${tool.id} has an invalid status`);
+
+    for (const field of ["inputs", "outputs", "steps"]) {
+      assert.ok(Array.isArray(tool[field]), `${tool.id}.${field} must be an array`);
+      assert.ok(tool[field].length > 0, `${tool.id}.${field} must not be empty`);
+      assert.ok(
+        tool[field].every((value) => typeof value === "string" && value.trim()),
+        `${tool.id}.${field} must contain non-empty strings`,
+      );
+    }
+
+    assert.ok(!Object.hasOwn(tool, "command"), `${tool.id} must not contain command`);
+    assert.ok(!Object.hasOwn(tool, "script"), `${tool.id} must not contain script`);
+
+    if (tool.repository !== undefined && tool.repository !== null) {
+      assert.match(tool.repository, /^https:\/\/github\.com\//);
+    }
+    if (tool.localUrl !== undefined && tool.localUrl !== null) {
+      assert.match(tool.localUrl, /^http:\/\/127\.0\.0\.1:\d+(?:\/|$)/);
+    }
+  }
+});
+
+test("looks up a tool by stable ID", () => {
+  assert.equal(registry.getTool("local-legal-redaction")?.name, "本地律师材料脱敏");
+  assert.equal(registry.getTool("unknown-tool"), undefined);
+});

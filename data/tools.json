@@ -1,0 +1,95 @@
+[
+  {
+    "id": "local-legal-redaction",
+    "name": "本地律师材料脱敏",
+    "category": "数据安全",
+    "status": "connected",
+    "summary": "在本机对律师材料进行识别、脱敏和复核准备，降低敏感信息外泄风险。",
+    "version": "feat/legal-redaction-mvp",
+    "repository": "https://github.com/zhy1126/Local-LLM-based-Legal-Document-De-identification-System/tree/feat/legal-redaction-mvp",
+    "localUrl": "http://127.0.0.1:8501",
+    "inputs": ["TXT", "DOCX", "PDF"],
+    "outputs": ["脱敏文本", "简洁 DOCX", "风险报告", "完整结果包"],
+    "steps": [
+      "确认本机已安装工具",
+      "打开本地页面并选择材料",
+      "检查识别结果",
+      "下载并由律师复核"
+    ],
+    "notice": "原始材料和映射仅在本机处理，输出须由律师复核。"
+  },
+  {
+    "id": "basic-work-skills",
+    "name": "基础工作 Skill",
+    "category": "基础工作",
+    "status": "planned",
+    "summary": "用于材料摘要、文件对比、信息提取和内容检查等基础工作。",
+    "version": "v0.1.0",
+    "inputs": ["任务说明", "待处理材料"],
+    "outputs": ["结构化结果", "待确认事项"],
+    "steps": ["明确处理目标", "整理待处理材料", "核对结构化结果", "确认待办事项"],
+    "notice": "处理范围和结论应由经办律师确认。"
+  },
+  {
+    "id": "legal-service-proposal",
+    "name": "法律服务建议书",
+    "category": "文书制作",
+    "status": "building",
+    "summary": "基于批准模板和项目资料生成法律服务建议书的初稿与核对项。",
+    "version": "v0.1.0",
+    "inputs": ["批准模板", "项目资料", "律师信息", "案例信息"],
+    "outputs": ["建议书初稿", "检查清单", "待确认项"],
+    "steps": ["确认批准模板", "整理项目与团队资料", "生成建议书初稿", "由律师核对后定稿"],
+    "notice": "仅可使用已批准的内容库。"
+  },
+  {
+    "id": "quotation-letter",
+    "name": "报价函",
+    "category": "文书制作",
+    "status": "planned",
+    "summary": "根据客户信息、服务范围和计费方案整理报价函初稿。",
+    "version": "v0.1.0",
+    "inputs": ["客户信息", "服务范围", "计费方案"],
+    "outputs": ["报价函初稿", "费用核对表"],
+    "steps": ["核对客户信息", "确认服务范围", "整理计费方案", "由律师复核费用表述"],
+    "notice": "报价条件、税费和审批要求须由负责律师确认。"
+  },
+  {
+    "id": "tender-response",
+    "name": "标书 / 响应文件",
+    "category": "文书制作",
+    "status": "planned",
+    "summary": "依据招标文件和响应模板组织标书或响应文件初稿。",
+    "version": "v0.1.0",
+    "inputs": ["招标文件", "响应模板", "团队与案例"],
+    "outputs": ["响应文件初稿", "偏离表", "缺件清单"],
+    "steps": ["梳理招标要求", "匹配响应模板", "汇总团队与案例", "由律师核验偏离与缺件"],
+    "notice": "投标承诺、资格文件和最终响应内容须按审批流程复核。"
+  },
+  {
+    "id": "contract-drafting",
+    "name": "合同制作",
+    "category": "文书制作",
+    "status": "planned",
+    "summary": "从合同模板家族和业务字段生成可供律师审阅的合同初稿。",
+    "version": "v0.1.0",
+    "inputs": ["合同模板家族", "项目字段", "商务条件"],
+    "outputs": ["合同初稿", "偏离项", "待确认问题"],
+    "steps": ["选择适用模板", "核对项目字段", "整理商务条件", "由律师审阅偏离与问题"],
+    "notice": "任何合同条款均须经有权审核人员确认后使用。"
+  },
+  {
+    "id": "transaction-structure-planning",
+    "name": "交易结构方案规划",
+    "category": "专业法律分析",
+    "status": "installable",
+    "summary": "围绕商业目标、交易事实和约束条件，形成交易结构的推荐与备选方案。",
+    "version": "v0.1.0",
+    "repository": null,
+    "localUrl": "http://127.0.0.1:8765/launch/transaction-structure-planning",
+    "inputs": ["商业目标", "交易事实", "硬约束", "材料与缺口"],
+    "outputs": ["推荐方案", "备选方案", "待确认事项", "后续任务包"],
+    "steps": ["梳理商业目标", "确认交易事实与约束", "比较可行结构", "由律师及会计师确认边界"],
+    "notice": "税务、会计处理及相关确认边界须由会计师确认。"
+  }
+]

@@ -89,17 +89,31 @@
     "notice": "任何合同条款均须经有权审核人员确认后使用。"
   },
   {
-    "id": "transaction-structure-planning",
-    "name": "交易结构方案规划",
+    "id": "pe-vc-financing-doc-review",
+    "name": "PE/VC 融资交易文件审阅",
     "category": "专业法律分析",
-    "status": "installable",
-    "summary": "围绕商业目标、交易事实和约束条件，形成交易结构的推荐与备选方案。",
-    "version": "v0.1.0",
+    "status": "local-skill",
+    "summary": "审阅未上市公司股权融资交易文件，识别重大条款、跨文件冲突并形成谈判建议。",
+    "version": "本机 Skill",
     "repository": null,
-    "localUrl": "http://127.0.0.1:8765/launch/transaction-structure-planning",
+    "localUrl": null,
+    "inputs": ["交易架构与委托方立场", "Term Sheet / SPA / SHA / 章程等文件", "文件版本与修改轮次", "重点关注事项"],
+    "outputs": ["重大问题清单", "逐条修改建议", "修订稿 / 红线版", "跨文件一致性检查"],
+    "steps": ["确认交易架构与审阅立场", "整理本轮文件及版本基线", "识别重大问题与跨文件冲突", "由律师确认谈判策略和修订文本"],
+    "notice": "适用于未上市公司股权融资交易文件；税务、会计、境外法及商业判断由相应专业人士确认。"
+  },
+  {
+    "id": "transaction-structure-planning",
+    "name": "投资并购方案规划",
+    "category": "专业法律分析",
+    "status": "local-skill",
+    "summary": "围绕控制权、收购方式和并表目标，形成投资并购的推荐、备选与兜底方案。",
+    "version": "本机 Skill",
+    "repository": null,
+    "localUrl": null,
     "inputs": ["商业目标", "交易事实", "硬约束", "材料与缺口"],
     "outputs": ["推荐方案", "备选方案", "待确认事项", "后续任务包"],
     "steps": ["梳理商业目标", "确认交易事实与约束", "比较可行结构", "由律师及会计师确认边界"],
-    "notice": "税务、会计处理及相关确认边界须由会计师确认。"
+    "notice": "中国法结论由经办律师复核；税务、会计处理、估值及境外法由相应专业人士确认。"
   }
 ]

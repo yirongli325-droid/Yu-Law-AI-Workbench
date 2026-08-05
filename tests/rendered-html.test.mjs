@@ -33,11 +33,24 @@ test("server-renders the workbench homepage and approved tools", async () => {
   assert.match(html, /团队专属的 AI 工具与 Skill 统一入口/);
   assert.match(html, /本地律师材料脱敏/);
   assert.match(html, /法律服务建议书/);
-  assert.match(html, /交易结构方案规划/);
+  assert.match(html, /PE\/VC 融资交易文件审阅/);
+  assert.match(html, /投资并购方案规划/);
   assert.match(html, /href="\/tools\/local-legal-redaction"/);
   assert.match(html, /本入口不会上传客户文件/);
   assert.doesNotMatch(html, /<input[^>]+type=["']file["']/i);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape|codex-preview/i);
+});
+
+test("local professional skills show an honest Codex handoff", async () => {
+  const response = await render("/tools/pe-vc-financing-doc-review");
+  assert.equal(response.status, 200);
+
+  const html = await response.text();
+  assert.match(html, /PE\/VC 融资交易文件审阅/);
+  assert.match(html, /重大问题清单/);
+  assert.match(html, /跨文件一致性检查/);
+  assert.match(html, /通过本地 Codex 调用/);
+  assert.doesNotMatch(html, /href="http:\/\/127\.0\.0\.1:8765/);
 });
 
 test("homepage exposes accessible navigation, filters, and tool landmarks", async () => {

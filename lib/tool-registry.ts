@@ -8,7 +8,7 @@ export const categories = [
   "专业法律分析",
 ] as const;
 
-export const statuses = ["connected", "installable", "planned", "building"] as const;
+export const statuses = ["connected", "local-skill", "installable", "planned", "building"] as const;
 
 export type Category = (typeof categories)[number];
 export type ToolStatus = (typeof statuses)[number];

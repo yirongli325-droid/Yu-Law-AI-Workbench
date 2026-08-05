@@ -38,6 +38,17 @@ const expectedTools = [
     notice: "原始材料和映射仅在本机处理，输出须由律师复核。",
   },
   {
+    id: "pe-vc-financing-doc-review",
+    name: "PE/VC 融资交易文件审阅",
+    category: "专业法律分析",
+    status: "local-skill",
+    version: "本机 Skill",
+    repository: null,
+    localUrl: null,
+    inputs: ["交易架构与委托方立场", "Term Sheet / SPA / SHA / 章程等文件", "文件版本与修改轮次", "重点关注事项"],
+    outputs: ["重大问题清单", "逐条修改建议", "修订稿 / 红线版", "跨文件一致性检查"],
+  },
+  {
     id: "basic-work-skills",
     name: "基础工作 Skill",
     category: "基础工作",
@@ -94,13 +105,12 @@ const expectedTools = [
   },
   {
     id: "transaction-structure-planning",
-    name: "交易结构方案规划",
+    name: "投资并购方案规划",
     category: "专业法律分析",
-    status: "installable",
-    version: "v0.1.0",
+    status: "local-skill",
+    version: "本机 Skill",
     repository: null,
-    localUrl:
-      "http://127.0.0.1:8765/launch/transaction-structure-planning",
+    localUrl: null,
     inputs: ["商业目标", "交易事实", "硬约束", "材料与缺口"],
     outputs: ["推荐方案", "备选方案", "待确认事项", "后续任务包"],
   },
@@ -116,6 +126,7 @@ test("exports the supported category and status filters", () => {
   ]);
   assert.deepEqual(registry.statuses, [
     "connected",
+    "local-skill",
     "installable",
     "planned",
     "building",
@@ -123,7 +134,7 @@ test("exports the supported category and status filters", () => {
 });
 
 test("defines approved tool identities and integration details", () => {
-  assert.equal(registry.tools.length, 7);
+  assert.equal(registry.tools.length, 8);
   assert.deepEqual(
     registry.tools.map(({
       id,
@@ -148,8 +159,8 @@ test("defines approved tool identities and integration details", () => {
       inputs,
       outputs,
       ...(id === "local-legal-redaction" ? { steps, notice } : {}),
-    })),
-    expectedTools,
+    })).toSorted((left, right) => left.id.localeCompare(right.id)),
+    expectedTools.toSorted((left, right) => left.id.localeCompare(right.id)),
   );
   assert.equal(
     registry.getTool("legal-service-proposal")?.notice,
@@ -160,6 +171,7 @@ test("defines approved tool identities and integration details", () => {
 test("keeps every tool record safe, complete, and displayable", () => {
   const allowedStatuses = new Set([
     "connected",
+    "local-skill",
     "installable",
     "planned",
     "building",

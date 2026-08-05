@@ -8,7 +8,11 @@ export function ToolActions({ localUrl, repository, status, compact = false }: T
   if (!localUrl && !repository) {
     return (
       <span className="unavailable-action" aria-label="工具接入状态">
-        {status === "building" ? "建设中" : "等待接入"}
+        {status === "local-skill"
+          ? "通过本地 Codex 调用"
+          : status === "building"
+            ? "建设中"
+            : "等待接入"}
       </span>
     );
   }

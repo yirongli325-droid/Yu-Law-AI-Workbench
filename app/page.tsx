@@ -1,15 +1,6 @@
-import type { Metadata } from "next";
-import { SkeletonPreview } from "./_sites-preview/SkeletonPreview";
-
-export const metadata: Metadata = {
-  title: "Your site is taking shape",
-  description:
-    "Your first version will appear here automatically when it’s ready.",
-  other: {
-    "codex-preview": "development",
-  },
-};
+import { WorkbenchShell } from "./_components/WorkbenchShell";
+import { tools } from "../lib/tool-registry";
 
 export default function Home() {
-  return <SkeletonPreview />;
+  return <WorkbenchShell tools={tools} />;
 }

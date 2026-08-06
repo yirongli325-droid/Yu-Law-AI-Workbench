@@ -7,7 +7,10 @@ export function ToolCard({ tool }: { tool: ToolRecord }) {
   const featured = tool.id === "local-legal-redaction";
 
   return (
-    <article className={`tool-card${featured ? " tool-card-featured" : ""}`}>
+    <article
+      className={`tool-card${featured ? " tool-card-featured" : ""}`}
+      data-category={tool.category}
+    >
       <div className="card-topline">
         <span className="category-label">{tool.category}</span>
         <span className={`status-badge status-${tool.status}`}>{statusLabels[tool.status]}</span>

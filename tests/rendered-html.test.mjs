@@ -113,6 +113,11 @@ test("homepage exposes accessible navigation, filters, and tool landmarks", asyn
   assert.match(html, /<label[^>]+for="tool-search"/i);
   assert.match(html, /<label[^>]+for="status-filter"/i);
   assert.match(html, /清除筛选/);
+  assert.match(html, /<div class="sidebar-note">\s*<strong>注意<\/strong>/);
+  assert.doesNotMatch(html, /<div class="sidebar-note">\s*<span[^>]*>01<\/span>/);
+  for (const category of ["数据安全", "基础工作", "文书制作", "专业法律分析", "Anthropic Legal"]) {
+    assert.match(html, new RegExp(`data-category="${category}"`));
+  }
 });
 
 test("redaction detail exposes metadata, workflow, and safe actions", async () => {

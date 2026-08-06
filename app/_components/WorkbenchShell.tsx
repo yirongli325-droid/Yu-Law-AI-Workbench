@@ -69,6 +69,7 @@ export function WorkbenchShell({ tools }: { tools: readonly ToolRecord[] }) {
               const count = item === "全部工具" ? tools.length : tools.filter((tool) => tool.category === item).length;
               return (
                 <button
+                  data-category={item === "全部工具" ? undefined : item}
                   className={category === item ? "category-button is-active" : "category-button"}
                   type="button"
                   aria-pressed={category === item}
@@ -82,7 +83,7 @@ export function WorkbenchShell({ tools }: { tools: readonly ToolRecord[] }) {
             })}
           </nav>
           <div className="sidebar-note">
-            <span aria-hidden="true">01</span>
+            <strong>注意</strong>
             <p>工具结果仅供工作辅助，关键结论须由经办律师复核。</p>
           </div>
         </aside>

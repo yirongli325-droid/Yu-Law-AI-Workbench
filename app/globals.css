@@ -12,6 +12,11 @@
   --line: #d8d8d0;
   --white: #fffefa;
   --focus: #b86e36;
+  --category-security: #29443a;
+  --category-foundation: #3f5e52;
+  --category-documents: #587667;
+  --category-analysis: #718d7f;
+  --category-anthropic: #8da397;
   --serif: "Songti SC", "Noto Serif SC", STSong, SimSun, serif;
   --sans: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 }
@@ -146,8 +151,15 @@ button { color: inherit; }
 .category-button:hover { color: var(--sage); }
 .category-button.is-active { padding-left: 15px; background: var(--forest); color: white; }
 .category-count { font-size: 12px; opacity: .65; }
+[data-category="数据安全"] { --category-accent: var(--category-security); }
+[data-category="基础工作"] { --category-accent: var(--category-foundation); }
+[data-category="文书制作"] { --category-accent: var(--category-documents); }
+[data-category="专业法律分析"] { --category-accent: var(--category-analysis); }
+[data-category="Anthropic Legal"] { --category-accent: var(--category-anthropic); }
+.category-button[data-category]:not(.is-active) { color: var(--category-accent); }
+.category-button[data-category]:not(.is-active) .category-count { color: var(--category-accent); opacity: 1; }
 .sidebar-note { margin-top: 38px; padding: 18px; background: var(--paper-deep); color: var(--muted); font-size: 12px; }
-.sidebar-note span { display: block; color: var(--sage); font-family: var(--serif); font-size: 20px; }
+.sidebar-note strong { display: block; color: var(--sage); font-size: 12px; letter-spacing: .12em; }
 .sidebar-note p { margin: 8px 0 0; }
 
 .toolbar {
@@ -197,6 +209,7 @@ button { color: inherit; }
   transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 .tool-card:hover { transform: translateY(-3px); border-color: #a6b5ad; box-shadow: 0 14px 34px rgba(32,50,45,.07); }
+.tool-card[data-category] { border-top: 4px solid var(--category-accent); }
 .tool-card-featured {
   grid-column: 1 / -1;
   min-height: 288px;
@@ -205,6 +218,7 @@ button { color: inherit; }
   color: white;
   border-color: var(--forest);
 }
+.tool-card-featured[data-category] { border-color: var(--forest); border-top-color: var(--category-accent); }
 .tool-card-featured::after { content: "LOCAL"; position: absolute; right: 36px; bottom: 14px; color: rgba(255,255,255,.045); font-family: var(--serif); font-size: clamp(64px, 10vw, 130px); line-height: 1; pointer-events: none; }
 .card-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .category-label { color: var(--sage); font-size: 12px; font-weight: 700; letter-spacing: .1em; }

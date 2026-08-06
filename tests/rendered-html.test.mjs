@@ -142,6 +142,25 @@ test("homepage exposes accessible navigation, filters, and tool landmarks", asyn
   }
 });
 
+test("homepage exposes a workflow map with business stages and capability layers", async () => {
+  const response = await render();
+  const html = await response.text();
+
+  assert.match(html, /流程地图/);
+  assert.match(html, /发起任务/);
+  assert.match(html, /资料读取 \/ 脱敏/);
+  assert.match(html, /律师复核 \/ 归档/);
+  assert.match(html, /前期准备/);
+  assert.match(html, /具体工作/);
+  assert.match(html, /文书起草/);
+  assert.match(html, /通用能力层/);
+  assert.match(html, /专业法律工作层/);
+  assert.match(html, /文书交付层/);
+  assert.match(html, /入口与保障层/);
+  assert.match(html, /data-workflow-tool="transaction-structure-planning"/);
+  assert.match(html, /data-workflow-tool="local-legal-redaction"/);
+});
+
 test("redaction detail exposes metadata, workflow, and safe actions", async () => {
   const response = await render("/tools/local-legal-redaction");
   assert.equal(response.status, 200);

@@ -4,10 +4,13 @@ import { useMemo, useState } from "react";
 import { categories, statuses, type Category, type ToolRecord, type ToolStatus } from "../../lib/tool-registry";
 import { statusLabels } from "../../lib/tool-status";
 import { ToolCard } from "./ToolCard";
+import { WorkflowMap } from "./WorkflowMap";
 
 const allStatuses = "all" as const;
+type WorkbenchView = "workflow" | "tools";
 
 export function WorkbenchShell({ tools }: { tools: readonly ToolRecord[] }) {
+  const [view, setView] = useState<WorkbenchView>("workflow");
   const [category, setCategory] = useState<Category>("全部工具");
   const [status, setStatus] = useState<ToolStatus | typeof allStatuses>(allStatuses);
   const [query, setQuery] = useState("");
@@ -61,87 +64,112 @@ export function WorkbenchShell({ tools }: { tools: readonly ToolRecord[] }) {
         </aside>
       </section>
 
-      <div className="workbench-layout">
-        <aside className="category-panel">
-          <p className="panel-label">工具分类</p>
-          <nav aria-label="工具分类">
-            {categories.map((item) => {
-              const count = item === "全部工具" ? tools.length : tools.filter((tool) => tool.category === item).length;
-              return (
-                <button
-                  data-category={item === "全部工具" ? undefined : item}
-                  className={category === item ? "category-button is-active" : "category-button"}
-                  type="button"
-                  aria-pressed={category === item}
-                  onClick={() => setCategory(item)}
-                  key={item}
-                >
-                  <span>{item}</span>
-                  <span className="category-count">{count}</span>
-                </button>
-              );
-            })}
-          </nav>
-          <div className="sidebar-note">
-            <strong>注意</strong>
-            <p>工具结果仅供工作辅助，关键结论须由经办律师复核。</p>
-          </div>
-        </aside>
-
-        <main id="main-content" tabIndex={-1}>
-          <div className="toolbar">
-            <div className="search-field">
-              <label htmlFor="tool-search">搜索工具</label>
-              <input
-                id="tool-search"
-                type="search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="搜索名称、场景或输入输出"
-              />
-            </div>
-            <div className="status-field">
-              <label htmlFor="status-filter">接入状态</label>
-              <select
-                id="status-filter"
-                value={status}
-                onChange={(event) => setStatus(event.target.value as ToolStatus | typeof allStatuses)}
-              >
-                <option value={allStatuses}>全部状态</option>
-                {statuses.map((item) => (
-                  <option value={item} key={item}>{statusLabels[item]}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="result-heading" aria-live="polite">
-            <p><strong>{filteredTools.length}</strong> 个工具</p>
-            <button
-              className="clear-button"
-              type="button"
-              onClick={clearFilters}
-              hidden={!hasFilters}
-              disabled={!hasFilters}
-            >
-              清除筛选
-            </button>
-          </div>
-
-          {filteredTools.length ? (
-            <section className="tool-grid" aria-label="工具列表">
-              {filteredTools.map((tool) => <ToolCard tool={tool} key={tool.id} />)}
-            </section>
-          ) : (
-            <section className="empty-state" aria-live="polite">
-              <p className="empty-index">00</p>
-              <h2>暂未找到匹配工具</h2>
-              <p>可以换一个关键词，或清除当前筛选条件。</p>
-              <button className="action action-primary" type="button" onClick={clearFilters}>清除筛选</button>
-            </section>
-          )}
-        </main>
+      <div className="view-switcher" aria-label="工作台视图">
+        <button
+          className={view === "workflow" ? "view-button is-active" : "view-button"}
+          type="button"
+          aria-pressed={view === "workflow"}
+          onClick={() => setView("workflow")}
+        >
+          流程地图
+        </button>
+        <button
+          className={view === "tools" ? "view-button is-active" : "view-button"}
+          type="button"
+          aria-pressed={view === "tools"}
+          onClick={() => setView("tools")}
+        >
+          工具清单
+        </button>
       </div>
+
+      <main id="main-content" tabIndex={-1}>
+        <div hidden={view !== "workflow"}>
+          <WorkflowMap tools={tools} />
+        </div>
+
+        <div className="workbench-layout" hidden={view !== "tools"}>
+          <aside className="category-panel">
+            <p className="panel-label">工具分类</p>
+            <nav aria-label="工具分类">
+              {categories.map((item) => {
+                const count = item === "全部工具" ? tools.length : tools.filter((tool) => tool.category === item).length;
+                return (
+                  <button
+                    data-category={item === "全部工具" ? undefined : item}
+                    className={category === item ? "category-button is-active" : "category-button"}
+                    type="button"
+                    aria-pressed={category === item}
+                    onClick={() => setCategory(item)}
+                    key={item}
+                  >
+                    <span>{item}</span>
+                    <span className="category-count">{count}</span>
+                  </button>
+                );
+              })}
+            </nav>
+            <div className="sidebar-note">
+              <strong>注意</strong>
+              <p>工具结果仅供工作辅助，关键结论须由经办律师复核。</p>
+            </div>
+          </aside>
+
+          <section className="tool-browser" aria-label="工具清单">
+            <div className="toolbar">
+              <div className="search-field">
+                <label htmlFor="tool-search">搜索工具</label>
+                <input
+                  id="tool-search"
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="搜索名称、场景或输入输出"
+                />
+              </div>
+              <div className="status-field">
+                <label htmlFor="status-filter">接入状态</label>
+                <select
+                  id="status-filter"
+                  value={status}
+                  onChange={(event) => setStatus(event.target.value as ToolStatus | typeof allStatuses)}
+                >
+                  <option value={allStatuses}>全部状态</option>
+                  {statuses.map((item) => (
+                    <option value={item} key={item}>{statusLabels[item]}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="result-heading" aria-live="polite">
+              <p><strong>{filteredTools.length}</strong> 个工具</p>
+              <button
+                className="clear-button"
+                type="button"
+                onClick={clearFilters}
+                hidden={!hasFilters}
+                disabled={!hasFilters}
+              >
+                清除筛选
+              </button>
+            </div>
+
+            {filteredTools.length ? (
+              <section className="tool-grid" aria-label="工具列表">
+                {filteredTools.map((tool) => <ToolCard tool={tool} key={tool.id} />)}
+              </section>
+            ) : (
+              <section className="empty-state" aria-live="polite">
+                <p className="empty-index">00</p>
+                <h2>暂未找到匹配工具</h2>
+                <p>可以换一个关键词，或清除当前筛选条件。</p>
+                <button className="action action-primary" type="button" onClick={clearFilters}>清除筛选</button>
+              </section>
+            )}
+          </section>
+        </div>
+      </main>
 
       <footer className="site-footer">
         <p>虞律团队 · 内部工作入口</p>

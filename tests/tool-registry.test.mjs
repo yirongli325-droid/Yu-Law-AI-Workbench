@@ -116,6 +116,27 @@ const expectedTools = [
     outputs: ["合同初稿", "偏离项", "待确认问题"],
   },
   {
+    id: "drafting-legal-service-contracts",
+    name: "法律服务合同受控起草",
+    category: "文书制作",
+    status: "local-skill",
+    version: "main（本机 Skill）",
+    repository: "https://github.com/zhy1126/drafting-legal-service-contracts",
+    localUrl: null,
+    inputs: [
+      "合同路由（常年顾问、并购/尽调专项或诉讼仲裁）",
+      "双方主体、委托事项、服务范围与期限",
+      "团队、收费、付款节点与第三方费用",
+      "争议解决、内部审批状态与适用 Word 母版",
+    ],
+    outputs: [
+      "清洁版法律服务合同 Word",
+      "项目参数摘要",
+      "待律师确认事项",
+      "相对基准模板的变更清单",
+    ],
+  },
+  {
     id: "transaction-structure-planning",
     name: "中国并购交易结构方案规划",
     category: "专业法律分析",
@@ -177,7 +198,7 @@ test("exports the supported category and status filters", () => {
 });
 
 test("defines approved tool identities and integration details", () => {
-  assert.equal(registry.tools.length, 20);
+  assert.equal(registry.tools.length, 21);
   assert.deepEqual(
     registry.tools.filter((tool) => expectedTools.some(({ id }) => id === tool.id)).map(({
       id,

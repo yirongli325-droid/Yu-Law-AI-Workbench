@@ -89,6 +89,35 @@
     "notice": "任何合同条款均须经有权审核人员确认后使用。"
   },
   {
+    "id": "drafting-legal-service-contracts",
+    "name": "法律服务合同受控起草",
+    "category": "文书制作",
+    "status": "local-skill",
+    "summary": "按固定入项和受控母版，起草常年顾问、并购或尽调专项、诉讼仲裁法律服务合同。",
+    "version": "main（本机 Skill）",
+    "repository": "https://github.com/zhy1126/drafting-legal-service-contracts",
+    "localUrl": null,
+    "inputs": [
+      "合同路由（常年顾问、并购/尽调专项或诉讼仲裁）",
+      "双方主体、委托事项、服务范围与期限",
+      "团队、收费、付款节点与第三方费用",
+      "争议解决、内部审批状态与适用 Word 母版"
+    ],
+    "outputs": [
+      "清洁版法律服务合同 Word",
+      "项目参数摘要",
+      "待律师确认事项",
+      "相对基准模板的变更清单"
+    ],
+    "steps": [
+      "在本地 Codex 中调用 $drafting-legal-service-contracts",
+      "选择常年顾问、并购/尽调专项或诉讼仲裁路由并填写固定入项",
+      "检查阻断事项和适用 Word 母版",
+      "生成四项成果并由经办律师复核"
+    ],
+    "notice": "当前为团队私有 Skill，GitHub 入口需相应权限。第一版不处理客户返稿或红线；待确认事项、利益冲突检查、收费审批和签署授权完成前，不得作为最终签署版本。"
+  },
+  {
     "id": "pe-vc-financing-doc-review",
     "name": "PE/VC 融资交易文件审阅",
     "category": "专业法律分析",

@@ -33,6 +33,7 @@ test("server-renders the workbench homepage and approved tools", async () => {
   assert.match(html, /团队专属的 AI 工具与 Skill 统一入口/);
   assert.match(html, /本地律师材料脱敏/);
   assert.match(html, /法律服务建议书/);
+  assert.match(html, /法律服务合同受控起草/);
   assert.match(html, /PE\/VC 融资交易文件审阅/);
   assert.match(html, /中国并购交易结构方案规划/);
   assert.match(html, /Anthropic Legal/);
@@ -99,6 +100,26 @@ test("M&A planning skill is deployed with its local invocation and GitHub source
   assert.match(
     html,
     /href="https:\/\/github\.com\/zhy1126\/Cross-border-M-and-A-Investment\/tree\/main\/skills\/handling-china-ma-transactions"/,
+  );
+});
+
+test("legal service contract drafting skill is deployed from its private repository", async () => {
+  const response = await render("/tools/drafting-legal-service-contracts");
+  assert.equal(response.status, 200);
+
+  const html = await response.text();
+  assert.match(html, /法律服务合同受控起草/);
+  assert.match(html, /\$drafting-legal-service-contracts/);
+  assert.match(html, /常年顾问、并购\/尽调专项或诉讼仲裁/);
+  assert.match(html, /清洁版法律服务合同 Word/);
+  assert.match(html, /项目参数摘要/);
+  assert.match(html, /待律师确认事项/);
+  assert.match(html, /相对基准模板的变更清单/);
+  assert.match(html, /团队私有 Skill/);
+  assert.match(html, /安装 \/ 查看 GitHub/);
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/zhy1126\/drafting-legal-service-contracts"/,
   );
 });
 

@@ -6,6 +6,7 @@ export const categories = [
   "基础工作",
   "文书制作",
   "专业法律分析",
+  "Anthropic Legal",
 ] as const;
 
 export const statuses = ["connected", "local-skill", "installable", "planned", "building"] as const;
@@ -49,6 +50,7 @@ const toolCategorySet = new Set<Exclude<Category, "全部工具">>([
   "基础工作",
   "文书制作",
   "专业法律分析",
+  "Anthropic Legal",
 ]);
 const toolStatusSet = new Set<ToolStatus>(statuses);
 

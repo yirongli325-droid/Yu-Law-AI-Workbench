@@ -35,10 +35,32 @@ test("server-renders the workbench homepage and approved tools", async () => {
   assert.match(html, /法律服务建议书/);
   assert.match(html, /PE\/VC 融资交易文件审阅/);
   assert.match(html, /中国并购交易结构方案规划/);
+  assert.match(html, /Anthropic Legal/);
+  assert.match(html, /尽调问题提取/);
+  assert.match(html, /董事会书面决议/);
   assert.match(html, /href="\/tools\/local-legal-redaction"/);
   assert.match(html, /本入口不会上传客户文件/);
   assert.doesNotMatch(html, /<input[^>]+type=["']file["']/i);
   assert.doesNotMatch(html, /react-loading-skeleton|Your site is taking shape|codex-preview/i);
+});
+
+test("Anthropic legal skills are deployed with local invocation and repository source", async () => {
+  const response = await render("/tools/diligence-issue-extraction");
+  assert.equal(response.status, 200);
+
+  const html = await response.text();
+  assert.match(html, /尽调问题提取/);
+  assert.match(html, /\$diligence-issue-extraction/);
+  assert.match(html, /资料室文件/);
+  assert.match(html, /问题清单/);
+  assert.match(html, /通过本地 Codex 调用/);
+  assert.match(html, /安装 \/ 查看 GitHub/);
+  assert.match(html, /Anthropic claude-for-legal/);
+  assert.match(html, /美国法/);
+  assert.match(
+    html,
+    /href="https:\/\/github\.com\/zhy1126\/Anthropic-Legal-Skills\/tree\/main\/skills\/diligence-issue-extraction"/,
+  );
 });
 
 test("PE/VC review skill is deployed with lawyer confirmation and GitHub source", async () => {

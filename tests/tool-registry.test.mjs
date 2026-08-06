@@ -143,6 +143,21 @@ const expectedTools = [
   },
 ];
 
+const expectedAnthropicTools = [
+  ["ai-tool-handoff", "AI 批量审阅工具交接", "将批量条款提取交给 Luminance、Kira 等工具，并按信任等级复核输出。"],
+  ["board-minutes", "董事会及委员会会议纪要", "根据议程、会议材料和记录起草董事会或委员会会议纪要。"],
+  ["closing-checklist", "交割清单管理", "维护交割事项、责任人、状态、关键路径和预计交割日。"],
+  ["cold-start-interview", "项目与团队配置访谈", "通过一次结构化访谈建立团队偏好、项目范围和工作环境。"],
+  ["deal-team-summary", "交易团队摘要", "把尽调发现压缩成适合管理层或项目团队阅读的简报。"],
+  ["diligence-issue-extraction", "尽调问题提取", "按预设分类和重要性标准，从资料室文件中提取尽调问题。"],
+  ["entity-compliance", "主体合规事项跟踪", "维护主体合规台账、申报期限、完成状态和健康检查。"],
+  ["integration-management", "并购后整合管理", "维护交割后整合计划、同意事项、合同转让和周报。"],
+  ["material-contract-schedule", "重大合同披露清单", "依据交易文件中的重大合同定义，从尽调结果生成披露清单。"],
+  ["matter-workspace", "项目工作空间管理", "创建、切换和关闭相互隔离的项目工作空间。"],
+  ["tabular-review", "批量表格化审阅", "按一份文件一行、一项信息一列的方式批量审阅并保留出处。"],
+  ["written-consent", "董事会书面决议", "参照既有范本起草董事会或委员会一致书面决议。"],
+];
+
 test("exports the supported category and status filters", () => {
   assert.deepEqual(registry.categories, [
     "全部工具",
@@ -150,6 +165,7 @@ test("exports the supported category and status filters", () => {
     "基础工作",
     "文书制作",
     "专业法律分析",
+    "Anthropic Legal",
   ]);
   assert.deepEqual(registry.statuses, [
     "connected",
@@ -161,9 +177,9 @@ test("exports the supported category and status filters", () => {
 });
 
 test("defines approved tool identities and integration details", () => {
-  assert.equal(registry.tools.length, 8);
+  assert.equal(registry.tools.length, 20);
   assert.deepEqual(
-    registry.tools.map(({
+    registry.tools.filter((tool) => expectedTools.some(({ id }) => id === tool.id)).map(({
       id,
       name,
       category,
@@ -193,6 +209,27 @@ test("defines approved tool identities and integration details", () => {
     registry.getTool("legal-service-proposal")?.notice,
     "仅可使用已批准的内容库。",
   );
+});
+
+test("deploys all installed Anthropic legal skills with local invocations and source links", () => {
+  const anthropicTools = registry.tools.filter((tool) => tool.category === "Anthropic Legal");
+  assert.equal(anthropicTools.length, expectedAnthropicTools.length);
+
+  for (const [id, name, summary] of expectedAnthropicTools) {
+    const tool = registry.getTool(id);
+    assert.ok(tool, `missing Anthropic legal skill: ${id}`);
+    assert.equal(tool.name, name);
+    assert.equal(tool.summary, summary);
+    assert.equal(tool.status, "local-skill");
+    assert.equal(tool.localUrl, null);
+    assert.equal(
+      tool.repository,
+      `https://github.com/zhy1126/Anthropic-Legal-Skills/tree/main/skills/${id}`,
+    );
+    assert.equal(tool.steps[0], `在本地 Codex 中调用 $${id}`);
+    assert.match(tool.notice, /Anthropic claude-for-legal/);
+    assert.match(tool.notice, /律师/);
+  }
 });
 
 test("keeps every tool record safe, complete, and displayable", () => {

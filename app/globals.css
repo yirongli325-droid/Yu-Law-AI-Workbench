@@ -219,6 +219,8 @@ button { color: inherit; }
 }
 .workflow-tool-list { display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
 .workflow-tool {
+  display: inline-flex;
+  align-items: center;
   min-height: 38px;
   padding: 8px 11px;
   border: 1px solid #cbd3ce;
@@ -226,6 +228,7 @@ button { color: inherit; }
   color: var(--ink);
   cursor: pointer;
   text-align: left;
+  text-decoration: none;
   transition: opacity .15s ease, border-color .15s ease, background .15s ease;
 }
 .workflow-tool:hover { border-color: var(--sage); }

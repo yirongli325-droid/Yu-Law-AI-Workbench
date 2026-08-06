@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { ToolRecord } from "../../lib/tool-registry";
 import {
   businessStages,
@@ -13,24 +13,10 @@ import {
 
 export function WorkflowMap({ tools }: { tools: readonly ToolRecord[] }) {
   const [activeStage, setActiveStage] = useState<SystemStage | null>(null);
-  const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
-
-  const selectedTool = useMemo(
-    () => tools.find((tool) => tool.id === selectedToolId),
-    [selectedToolId, tools],
-  );
-  const selectedProfile = selectedTool ? getWorkflowProfile(selectedTool.id) : undefined;
 
   function isRelevant(tool: ToolRecord) {
     if (!activeStage) return true;
     return getWorkflowProfile(tool.id)?.systemStages.includes(activeStage) ?? false;
-  }
-
-  function selectTool(toolId: string) {
-    const profile = getWorkflowProfile(toolId);
-    setSelectedToolId(toolId);
-    setActiveStage(null);
-    if (!profile) setSelectedToolId(null);
   }
 
   return (
@@ -49,10 +35,7 @@ export function WorkflowMap({ tools }: { tools: readonly ToolRecord[] }) {
             className={activeStage === stage ? "flow-stage is-active" : "flow-stage"}
             type="button"
             aria-pressed={activeStage === stage}
-            onClick={() => {
-              setActiveStage(activeStage === stage ? null : stage);
-              setSelectedToolId(null);
-            }}
+            onClick={() => setActiveStage(activeStage === stage ? null : stage)}
             key={stage}
           >
             {stage}
@@ -81,15 +64,14 @@ export function WorkflowMap({ tools }: { tools: readonly ToolRecord[] }) {
                       return profile?.level === level && profile.businessStages.includes(businessStage);
                     })
                     .map((tool) => (
-                      <button
-                        className={`workflow-tool${selectedToolId === tool.id ? " is-selected" : ""}${isRelevant(tool) ? "" : " is-dimmed"}`}
+                      <Link
+                        className={`workflow-tool${isRelevant(tool) ? "" : " is-dimmed"}`}
                         data-workflow-tool={tool.id}
-                        type="button"
-                        onClick={() => selectTool(tool.id)}
+                        href={`/tools/${tool.id}`}
                         key={`${businessStage}-${tool.id}`}
                       >
                         {tool.name}
-                      </button>
+                      </Link>
                     ))}
                 </div>
               </div>
@@ -106,34 +88,24 @@ export function WorkflowMap({ tools }: { tools: readonly ToolRecord[] }) {
             {tools
               .filter((tool) => getWorkflowProfile(tool.id)?.level === "入口与保障层")
               .map((tool) => (
-                <button
-                  className={`workflow-tool${selectedToolId === tool.id ? " is-selected" : ""}${isRelevant(tool) ? "" : " is-dimmed"}`}
+                <Link
+                  className={`workflow-tool${isRelevant(tool) ? "" : " is-dimmed"}`}
                   data-workflow-tool={tool.id}
-                  type="button"
-                  onClick={() => selectTool(tool.id)}
+                  href={`/tools/${tool.id}`}
                   key={tool.id}
                 >
                   {tool.name}
-                </button>
+                </Link>
               ))}
           </div>
         </section>
       </div>
 
       <div className="workflow-selection" aria-live="polite">
-        {selectedTool && selectedProfile ? (
-          <>
-            <div>
-              <strong>{selectedTool.name}</strong>
-              <p>{selectedProfile.level} · {selectedProfile.businessStages.join("、")}</p>
-            </div>
-            <p className="workflow-route">{selectedProfile.systemStages.join(" → ")}</p>
-            <Link href={`/tools/${selectedTool.id}`}>查看使用说明 →</Link>
-          </>
-        ) : activeStage ? (
+        {activeStage ? (
           <p><strong>{activeStage}</strong>：已高亮本环节相关的 Skill。</p>
         ) : (
-          <p>选择一个流程环节或 Skill，查看它在整个工作流中的位置。</p>
+          <p>点击任一 Skill，可直接进入该工具的使用说明。</p>
         )}
       </div>
     </section>

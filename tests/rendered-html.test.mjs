@@ -159,6 +159,14 @@ test("homepage exposes a workflow map with business stages and capability layers
   assert.match(html, /入口与保障层/);
   assert.match(html, /data-workflow-tool="transaction-structure-planning"/);
   assert.match(html, /data-workflow-tool="local-legal-redaction"/);
+  assert.match(
+    html,
+    /<a(?=[^>]*data-workflow-tool="transaction-structure-planning")(?=[^>]*href="\/tools\/transaction-structure-planning")[^>]*>/,
+  );
+  assert.match(
+    html,
+    /<a(?=[^>]*data-workflow-tool="local-legal-redaction")(?=[^>]*href="\/tools\/local-legal-redaction")[^>]*>/,
+  );
 });
 
 test("redaction detail exposes metadata, workflow, and safe actions", async () => {

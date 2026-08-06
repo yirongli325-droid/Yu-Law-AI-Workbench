@@ -34,6 +34,7 @@ test("server-renders the workbench homepage and approved tools", async () => {
   assert.match(html, /本地律师材料脱敏/);
   assert.match(html, /法律服务建议书/);
   assert.match(html, /法律服务合同受控起草/);
+  assert.doesNotMatch(html, /href="\/tools\/contract-drafting"/);
   assert.match(html, /PE\/VC 融资交易文件审阅/);
   assert.match(html, /中国并购交易结构方案规划/);
   assert.match(html, /Anthropic Legal/);
@@ -166,4 +167,12 @@ test("unknown tool IDs return a friendly Chinese 404", async () => {
   const html = await response.text();
   assert.match(html, /没有找到这个工具/);
   assert.match(html, /返回 AI 工作台/);
+});
+
+test("removed generic contract drafting entry returns the friendly 404", async () => {
+  const response = await render("/tools/contract-drafting");
+  assert.equal(response.status, 404);
+
+  const html = await response.text();
+  assert.match(html, /没有找到这个工具/);
 });

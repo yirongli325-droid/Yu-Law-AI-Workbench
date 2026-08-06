@@ -105,17 +105,6 @@ const expectedTools = [
     outputs: ["响应文件初稿", "偏离表", "缺件清单"],
   },
   {
-    id: "contract-drafting",
-    name: "合同制作",
-    category: "文书制作",
-    status: "planned",
-    version: "v0.1.0",
-    repository: null,
-    localUrl: null,
-    inputs: ["合同模板家族", "项目字段", "商务条件"],
-    outputs: ["合同初稿", "偏离项", "待确认问题"],
-  },
-  {
     id: "drafting-legal-service-contracts",
     name: "法律服务合同受控起草",
     category: "文书制作",
@@ -198,7 +187,7 @@ test("exports the supported category and status filters", () => {
 });
 
 test("defines approved tool identities and integration details", () => {
-  assert.equal(registry.tools.length, 21);
+  assert.equal(registry.tools.length, 20);
   assert.deepEqual(
     registry.tools.filter((tool) => expectedTools.some(({ id }) => id === tool.id)).map(({
       id,
@@ -230,6 +219,7 @@ test("defines approved tool identities and integration details", () => {
     registry.getTool("legal-service-proposal")?.notice,
     "仅可使用已批准的内容库。",
   );
+  assert.equal(registry.getTool("contract-drafting"), undefined);
 });
 
 test("deploys all installed Anthropic legal skills with local invocations and source links", () => {

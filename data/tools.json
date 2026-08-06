@@ -75,20 +75,6 @@
     "notice": "投标承诺、资格文件和最终响应内容须按审批流程复核。"
   },
   {
-    "id": "contract-drafting",
-    "name": "合同制作",
-    "category": "文书制作",
-    "status": "planned",
-    "summary": "从合同模板家族和业务字段生成可供律师审阅的合同初稿。",
-    "version": "v0.1.0",
-    "repository": null,
-    "localUrl": null,
-    "inputs": ["合同模板家族", "项目字段", "商务条件"],
-    "outputs": ["合同初稿", "偏离项", "待确认问题"],
-    "steps": ["选择适用模板", "核对项目字段", "整理商务条件", "由律师审阅偏离与问题"],
-    "notice": "任何合同条款均须经有权审核人员确认后使用。"
-  },
-  {
     "id": "drafting-legal-service-contracts",
     "name": "法律服务合同受控起草",
     "category": "文书制作",

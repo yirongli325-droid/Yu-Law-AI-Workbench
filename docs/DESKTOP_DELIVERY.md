@@ -9,6 +9,8 @@
 
 ## Windows 可重复构建
 
+仓库维护者可以从 GitHub Actions 手动运行 `Build Windows EXE`，在原生 Windows Server 2022 构建机生成单文件 `YuLawWorkbench.exe` 和 `SHA256SUMS.txt`。
+
 前提：Windows 11 x64、Git、Node.js 22.13.0，以及可联网访问 npm 注册表的构建环境。发布管理员须从交付清单取得受信任仓库 URL 和完整的 40 位 Git 修订号。创建一个不含客户材料的全新临时目录；不要清理或复用日常工作目录。随后在 PowerShell 中执行（替换前两行占位值）：
 
 ```powershell
@@ -41,7 +43,7 @@ Get-ChildItem dist -File -Recurse | Sort-Object FullName |
 
 ## 已知限制
 
-- 当前仓库没有 Electron/Tauri 主进程、Windows 安装器配置、代码签名或绿色版可执行文件；`build:desktop` 验证的是本地 Web UI 与受控 Node 能力模块，不能宣称已生成普通用户可直接安装的桌面程序。
+- 当前桌面程序使用 Python/Tkinter 与 PyInstaller `onefile` 模式，不需要 Electron/Tauri 或安装器；生成的是免安装绿色版 `YuLawWorkbench.exe`。它尚未进行商业代码签名，因此 Windows SmartScreen 仍可能显示未知发布者提示。
 - Linux 构建机不能替代 Windows 安装、SmartScreen 和签名验证。发布安装包前必须另建 Windows 打包任务。
 - 自动化 provider 旅程使用受控替身，不会消费真实订阅，也不能证明目标电脑已登录；真实登录状态须通过官方 CLI 验证。
 - SBOM 是基于锁文件的发布物料快照；依赖变化后须重新生成并复核许可证与漏洞信息。

@@ -29,6 +29,13 @@ jobs:
         run: |
           $process = Start-Process -FilePath dist/YuLawWorkbench.exe -ArgumentList "--self-test" -PassThru -Wait
           if ($process.ExitCode -ne 0) { throw "Packaged executable self-test failed with exit code $($process.ExitCode)" }
+      - name: Verify GUI remains running
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath dist/YuLawWorkbench.exe -PassThru
+          Start-Sleep -Seconds 10
+          if ($process.HasExited) { throw "Packaged GUI exited during the 10-second stability check with exit code $($process.ExitCode)" }
+          Stop-Process -Id $process.Id
       - name: Record SHA-256
         shell: pwsh
         run: |

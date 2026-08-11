@@ -38,6 +38,16 @@ jobs:
           dist/YuLawWorkbench.app/Contents/MacOS/YuLawWorkbench --self-test
           codesign --force --deep --sign - dist/YuLawWorkbench.app
           codesign --verify --deep --strict --verbose=2 dist/YuLawWorkbench.app
+          dist/YuLawWorkbench.app/Contents/MacOS/YuLawWorkbench &
+          APP_PID=$!
+          sleep 10
+          if ! kill -0 "$APP_PID" 2>/dev/null; then
+            wait "$APP_PID"
+            echo "Packaged GUI exited during the 10-second stability check" >&2
+            exit 1
+          fi
+          kill "$APP_PID"
+          wait "$APP_PID" || true
           file dist/YuLawWorkbench.app/Contents/MacOS/YuLawWorkbench
           mkdir dmg-root
           cp -R dist/YuLawWorkbench.app dmg-root/

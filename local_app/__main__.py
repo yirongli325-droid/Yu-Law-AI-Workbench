@@ -1,14 +1,15 @@
 import sys
-import tkinter as tk
 
-from local_app.main import main
+from local_app.main import YuLawApp, main
 
 
 def self_test() -> None:
-    root = tk.Tk()
-    root.withdraw()
-    root.update_idletasks()
-    root.destroy()
+    # Construct the real application so packaged-resource failures cannot hide
+    # behind a Tk-only smoke test. Keep the window invisible for CI.
+    app = YuLawApp()
+    app.withdraw()
+    app.update_idletasks()
+    app.destroy()
 
 
 if __name__ == "__main__":

@@ -35,6 +35,13 @@ class LocalAppTests(unittest.TestCase):
             self.assertEqual("ready",next(tool for tool in tools if tool.id=="local-legal-redaction").runtime_status)
             self.assertEqual("planned",next(tool for tool in tools if tool.id=="quotation-letter").runtime_status)
 
+    def test_packaging_includes_catalog_and_self_test_builds_real_app(self):
+        root = Path(__file__).resolve().parents[1]
+        spec = (root / "YuLawWorkbench.spec").read_text(encoding="utf-8")
+        entrypoint = (root / "local_app" / "__main__.py").read_text(encoding="utf-8")
+        self.assertIn('datas=[("data/tools.json", "data")]', spec)
+        self.assertIn("app = YuLawApp()", entrypoint)
+
     def test_history_filter_retry_and_record_only_delete(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); source=root/"客户 合同.txt"; source.write_text("x",encoding="utf-8"); output=root/"results"; output.mkdir()

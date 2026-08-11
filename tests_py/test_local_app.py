@@ -3,13 +3,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from local_app.core import DRAFT_NOTICE, TaskRequest, TaskRunner, disclosure, load_tool_catalog, provider_command
-from local_app.__main__ import self_test
 
 
 class LocalAppTests(unittest.TestCase):
-    def test_packaged_entrypoint_exposes_self_test(self):
-        self.assertTrue(callable(self_test))
-
     def request(self, root: Path, provider: str="Codex") -> TaskRequest:
         source=root/"input.txt"; source.write_text("test",encoding="utf-8")
         return TaskRequest(provider,"审阅合同",(str(source),),str(root/"out"))

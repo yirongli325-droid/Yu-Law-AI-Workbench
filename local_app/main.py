@@ -16,6 +16,8 @@ class YuLawApp(tk.Tk):
         super().__init__(); self.title("Yu Law 本地 AI 工作台"); self.geometry("860x650"); self.minsize(720, 540)
         self.runner=TaskRunner(); self.files: list[str]=[]; self.tools=load_tool_catalog()
         self.provider=tk.StringVar(value="Codex"); self.output=tk.StringVar(value=str(Path.home()/"Documents"/"YuLaw"))
+        self.tool_name=tk.StringVar(value=self.tools[0].name)
+        self.tool_ids={tool.name:tool.id for tool in self.tools}
         self.status=tk.StringVar(value="就绪｜请先通过官方 Codex 或 Claude CLI 登录")
         self._build(); self._bind_shortcuts()
 
@@ -30,8 +32,11 @@ class YuLawApp(tk.Tk):
         ttk.Combobox(row,textvariable=self.provider,values=("Codex","Claude"),state="readonly",width=16).pack(side="left",padx=10)
         provider_state="｜".join(f"{name}: {'可用' if self.runner.provider_available(name) else '未安装'}" for name in ("Codex","Claude"))
         ttk.Label(row,text=provider_state).pack(side="left",padx=8)
-        ttk.Button(row,text="选择材料",command=self._files).pack(side="left",padx=6)
-        self.file_label=ttk.Label(row,text="尚未选择"); self.file_label.pack(side="left",padx=8)
+        ttk.Button(row,text="登录",command=self._login).pack(side="left",padx=4)
+        tool_row=ttk.Frame(task); tool_row.pack(fill="x",pady=(10,0)); ttk.Label(tool_row,text="法律工具").pack(side="left")
+        ttk.Combobox(tool_row,textvariable=self.tool_name,values=tuple(self.tool_ids),state="readonly",width=28).pack(side="left",padx=10)
+        ttk.Button(tool_row,text="选择材料",command=self._files).pack(side="left",padx=6)
+        self.file_label=ttk.Label(tool_row,text="尚未选择"); self.file_label.pack(side="left",padx=8)
         ttk.Label(task,text="任务说明").pack(anchor="w",pady=(16,4)); self.instruction=tk.Text(task,height=8,wrap="word"); self.instruction.pack(fill="x")
         out=ttk.Frame(task); out.pack(fill="x",pady=12); ttk.Label(out,text="成果目录").pack(side="left")
         ttk.Entry(out,textvariable=self.output).pack(side="left",fill="x",expand=True,padx=10); ttk.Button(out,text="选择",command=self._output).pack(side="left")
@@ -134,11 +139,15 @@ class YuLawApp(tk.Tk):
 
     def _files(self) -> None:
         self.files=list(filedialog.askopenfilenames(title="选择要交给 AI 处理的法律材料")); self.file_label.config(text=f"已选择 {len(self.files)} 个文件")
+    def _login(self) -> None:
+        try: self.runner.launch_login(self.provider.get())
+        except Exception as error: messagebox.showerror("无法登录",str(error)); return
+        messagebox.showinfo("登录已启动","请在官方登录窗口完成账号登录。工作台不会读取或保存凭据。")
     def _output(self) -> None:
         value=filedialog.askdirectory(title="选择成果目录");
         if value: self.output.set(value)
     def _request(self) -> TaskRequest:
-        return TaskRequest(self.provider.get(),self.instruction.get("1.0","end"),tuple(self.files),self.output.get())
+        return TaskRequest(self.provider.get(),self.instruction.get("1.0","end"),tuple(self.files),self.output.get(),self.tool_ids[self.tool_name.get()])
     def _confirm(self) -> None:
         try: preview=disclosure(self._request())
         except Exception as error: messagebox.showerror("无法执行",str(error)); return

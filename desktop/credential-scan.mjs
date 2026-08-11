@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const excluded = new Set([".git", ".autodev", "node_modules"]);
-const binaryExtensions = new Set([".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2"]);
+const binaryExtensions = new Set([".png", ".jpg", ".jpeg", ".gif", ".ico", ".woff", ".woff2", ".pyc"]);
 const rules = [
   ["private key", new RegExp(["-----BEGIN (?:RSA |EC |OPENSSH )?", "PRIVATE KEY-----"].join(""))],
   ["provider token", new RegExp(["(?:sk|ghp|xox[baprs])-", "[A-Za-z0-9_-]{20,}"].join(""))],

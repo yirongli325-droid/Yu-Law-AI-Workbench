@@ -4,7 +4,7 @@
   "serialNumber": "urn:uuid:8518d67e-61a0-4a00-8000-000000000001",
   "version": 1,
   "metadata": {
-    "component": { "type": "application", "name": "yu-law-ai-workbench", "version": "0.1.0" },
+    "component": { "type": "application", "name": "yu-law-ai-workbench", "version": "0.1.1" },
     "properties": [
       { "name": "yu-law:source-of-truth", "value": "package-lock.json" },
       { "name": "yu-law:scope", "value": "all direct runtime and development dependencies; transitive resolution remains in package-lock.json" }

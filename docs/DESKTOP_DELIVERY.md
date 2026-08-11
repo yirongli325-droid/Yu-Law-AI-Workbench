@@ -1,4 +1,4 @@
-# 桌面候选版交付说明
+# Yu Law Workbench v0.1.1 桌面交付说明
 
 ## 交付内容
 
@@ -12,6 +12,8 @@
 仓库维护者可以从 GitHub Actions 手动运行 `Build Windows EXE`，在原生 Windows Server 2022 构建机生成单文件 `YuLawWorkbench.exe` 和 `SHA256SUMS.txt`。
 
 `Build macOS App` 会分别在 Apple Silicon 和 Intel 构建机生成对应的 `.dmg`。应用采用临时签名以验证包结构，但没有 Apple Developer ID 公证；首次启动时用户可能需要在“隐私与安全性”中确认打开。
+
+两个原生 workflow 都必须运行打包后二进制的 `--self-test-full`，该测试会构造真实 `YuLawApp`、读取内置的 20 项工具目录并检查三个主页面。随后还会保持 GUI 运行 10 秒，提前退出即视为失败；只有通过这些运行时检查的产物才可发布。
 
 前提：Windows 11 x64、Git、Node.js 22.13.0，以及可联网访问 npm 注册表的构建环境。发布管理员须从交付清单取得受信任仓库 URL 和完整的 40 位 Git 修订号。创建一个不含客户材料的全新临时目录；不要清理或复用日常工作目录。随后在 PowerShell 中执行（替换前两行占位值）：
 
@@ -46,7 +48,7 @@ Get-ChildItem dist -File -Recurse | Sort-Object FullName |
 ## 已知限制
 
 - 当前桌面程序使用 Python/Tkinter 与 PyInstaller `onefile` 模式，不需要 Electron/Tauri 或安装器；生成的是免安装绿色版 `YuLawWorkbench.exe`。它尚未进行商业代码签名，因此 Windows SmartScreen 仍可能显示未知发布者提示。
-- Linux 构建机不能替代 Windows 安装、SmartScreen 和签名验证。发布安装包前必须另建 Windows 打包任务。
+- Linux/Wine 不能替代 Windows、macOS 原生运行、安全提示和签名验证。发布前必须使用对应的 GitHub 原生构建任务；PyInstaller one-file GUI 在当前 Wine 兼容层会报告无法启动嵌入式解释器，但同一产物已在原生 Windows 运行验收。
 - 自动化 provider 旅程使用受控替身，不会消费真实订阅，也不能证明目标电脑已登录；真实登录状态须通过官方 CLI 验证。
 - SBOM 是基于锁文件的发布物料快照；依赖变化后须重新生成并复核许可证与漏洞信息。
 - AI 输出可能不准确且不构成最终法律意见，必须由律师复核。

@@ -1,14 +1,14 @@
 # Yu Law 本地 AI 工作台
 
-Yu Law 是面向法律工作者的本地 Windows AI 工作台候选版。仓库包含 Python/Tkinter 桌面壳、法律工具目录、受控官方 CLI 执行、任务历史与可重复的 Windows 打包配置。AI 生成内容是草稿，须由经办律师复核。
+Yu Law 是面向法律工作者的本地 Windows 与 macOS AI 工作台。仓库包含 Python/Tkinter 桌面壳、法律工具目录、受控官方 CLI 执行、任务历史，以及可重复的 Windows x64、macOS Apple Silicon 和 Intel 打包配置。AI 生成内容是草稿，须由经办律师复核。
 
 ## 普通用户：安装与登录
 
-当前候选版本可生成未签名的 `YuLawWorkbench.exe`。管理员按 [Windows 可重复构建说明](docs/DESKTOP_DELIVERY.md#windows-可重复构建)在可信 Windows 构建机生成并验证后交付。不要运行来源不明的安装脚本。
+v0.1.1 提供 Windows x64 单文件 `YuLawWorkbench.exe`，以及 macOS Apple Silicon/Intel `.dmg`。管理员按[桌面交付说明](docs/DESKTOP_DELIVERY.md)在对应原生构建机生成并验证后交付。不要运行来源不明的安装脚本。
 
 1. 安装官方 Codex CLI 或 Claude Code CLI（可只安装计划使用的一种）。
-2. 在 PowerShell 中运行该 CLI 的官方登录命令，并在官方浏览器页面完成登录。工作台不会要求或保存账号密码、浏览器 Cookie 或令牌。
-3. 启动 `YuLawWorkbench.exe`；本机任务记录默认保存在当前 Windows 用户的本地应用数据目录，限制见交付说明。
+2. 点击工作台中的“登录”，或在终端运行该 CLI 的官方登录命令，并在官方页面完成登录。工作台不会要求或保存账号密码、浏览器 Cookie 或令牌。
+3. 启动 Windows `YuLawWorkbench.exe` 或 macOS `YuLawWorkbench.app`；本机任务记录保存在当前用户的本地数据目录，限制见交付说明。
 
 网页订阅不等同于通用 API 额度。是否可用、使用限制及组织策略以官方 CLI 的实际输出为准。
 
@@ -21,7 +21,7 @@ Yu Law 是面向法律工作者的本地 Windows AI 工作台候选版。仓库�
 
 ## 找回成果
 
-任务成功后，从任务结果打开成果文件或成果目录；也可在任务历史中按状态筛选并重新打开。成果默认位于任务选择的输出目录。删除一条历史记录不应删除原始文件或成果文件；文件删除必须另行确认。若界面无法打开成果，复制任务显示的成果路径并在 Windows 文件资源管理器中打开。
+任务成功后，从任务结果打开成果文件或成果目录；也可在任务历史中按状态筛选并重新打开。成果默认位于任务选择的输出目录。删除一条历史记录不应删除原始文件或成果文件；文件删除必须另行确认。若界面无法打开成果，复制任务显示的成果路径并在 Windows 文件资源管理器或 macOS Finder 中打开。
 
 ## 管理员：验证与故障排查
 

@@ -40,7 +40,14 @@ class LocalAppTests(unittest.TestCase):
         spec = (root / "YuLawWorkbench.spec").read_text(encoding="utf-8")
         entrypoint = (root / "local_app" / "__main__.py").read_text(encoding="utf-8")
         self.assertIn('datas=[("data/tools.json", "data")]', spec)
+        self.assertIn("def self_test_full()", entrypoint)
         self.assertIn("app = YuLawApp()", entrypoint)
+        self.assertIn("len(app.tabs.tabs()) != 3", entrypoint)
+        self.assertIn("len(app.tools) != 20", entrypoint)
+
+    def test_catalog_uses_frozen_bundle_root(self):
+        source = (Path(__file__).resolve().parents[1] / "local_app" / "core.py").read_text(encoding="utf-8")
+        self.assertIn('getattr(sys, "_MEIPASS"', source)
 
     def test_open_path_uses_native_macos_open(self):
         source = (Path(__file__).resolve().parents[1] / "local_app" / "main.py").read_text(encoding="utf-8")

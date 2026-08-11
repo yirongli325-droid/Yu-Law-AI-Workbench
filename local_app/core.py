@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import threading
 import urllib.parse
 import urllib.request
@@ -77,7 +78,8 @@ def runtime_tool_status(record: dict, *, home: Path | None = None,
 
 def load_tool_catalog(data_path: Path | None = None, *, home: Path | None = None,
                       opener: Callable[..., object] = urllib.request.urlopen) -> tuple[CatalogTool, ...]:
-    source = data_path or Path(__file__).resolve().parents[1] / "data" / "tools.json"
+    bundle_root = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[1]))
+    source = data_path or bundle_root / "data" / "tools.json"
     records = json.loads(source.read_text(encoding="utf-8"))
     if not isinstance(records, list):
         raise ValueError("工具目录必须是数组")

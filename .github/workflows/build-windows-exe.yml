@@ -27,7 +27,7 @@ jobs:
       - name: Smoke-test packaged executable
         shell: pwsh
         run: |
-          $process = Start-Process -FilePath dist/YuLawWorkbench.exe -ArgumentList "--self-test" -PassThru -Wait
+          $process = Start-Process -FilePath dist/YuLawWorkbench.exe -ArgumentList "--self-test-full" -PassThru -Wait
           if ($process.ExitCode -ne 0) { throw "Packaged executable self-test failed with exit code $($process.ExitCode)" }
       - name: Verify GUI remains running
         shell: pwsh

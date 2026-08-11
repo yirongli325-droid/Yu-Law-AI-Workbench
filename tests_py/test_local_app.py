@@ -42,6 +42,11 @@ class LocalAppTests(unittest.TestCase):
         self.assertIn('datas=[("data/tools.json", "data")]', spec)
         self.assertIn("app = YuLawApp()", entrypoint)
 
+    def test_open_path_uses_native_macos_open(self):
+        source = (Path(__file__).resolve().parents[1] / "local_app" / "main.py").read_text(encoding="utf-8")
+        self.assertIn('elif sys.platform == "darwin":', source)
+        self.assertIn('subprocess.Popen(["open", str(target)])', source)
+
     def test_history_filter_retry_and_record_only_delete(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d); source=root/"客户 合同.txt"; source.write_text("x",encoding="utf-8"); output=root/"results"; output.mkdir()

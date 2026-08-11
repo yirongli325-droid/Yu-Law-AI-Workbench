@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 import threading
 import tkinter as tk
 from pathlib import Path
@@ -23,7 +24,7 @@ class YuLawApp(tk.Tk):
         ttk.Label(root,text="Yu Law 本地 AI 工作台",font=("Microsoft YaHei UI",20,"bold")).pack(anchor="w")
         ttk.Label(root,text="本地选择材料，明确确认后调用已登录的官方 CLI。不会保存账号凭据。",foreground="#475569").pack(anchor="w",pady=(4,16))
         self.tabs=ttk.Notebook(root); self.tabs.pack(fill="both",expand=True)
-        task=ttk.Frame(tabs,padding=(0,12,0,0)); catalog=ttk.Frame(tabs,padding=(0,12,0,0)); history=ttk.Frame(tabs,padding=(0,12,0,0))
+        task=ttk.Frame(self.tabs,padding=(0,12,0,0)); catalog=ttk.Frame(self.tabs,padding=(0,12,0,0)); history=ttk.Frame(self.tabs,padding=(0,12,0,0))
         self.tabs.add(task,text="新建任务"); self.tabs.add(catalog,text="法律工具目录"); self.tabs.add(history,text="任务历史")
         row=ttk.Frame(task); row.pack(fill="x"); ttk.Label(row,text="提供商").pack(side="left")
         ttk.Combobox(row,textvariable=self.provider,values=("Codex","Claude"),state="readonly",width=16).pack(side="left",padx=10)
@@ -111,8 +112,7 @@ class YuLawApp(tk.Tk):
     def _history_open(self) -> None:
         try: target=self.runner.result_directory(self._selected_history_id())
         except Exception as error: messagebox.showerror("无法打开",str(error)); return
-        if os.name=="nt": os.startfile(target)  # type: ignore[attr-defined]
-        else: subprocess.Popen(["xdg-open",str(target)])
+        self._open_path(target)
 
     def _history_copy_error(self) -> None:
         try: summary=self.runner.history_record(self._selected_history_id()).get("error_summary","")
@@ -154,8 +154,16 @@ class YuLawApp(tk.Tk):
         self.log.config(state="normal"); self.log.insert("end",text); self.log.see("end"); self.log.config(state="disabled")
     def _open_output(self) -> None:
         target=Path(self.output.get()); target.mkdir(parents=True,exist_ok=True)
-        if os.name=="nt": os.startfile(target)  # type: ignore[attr-defined]
-        else: subprocess.Popen(["xdg-open",str(target)])
+        self._open_path(target)
+
+    @staticmethod
+    def _open_path(target: Path) -> None:
+        if os.name == "nt":
+            os.startfile(target)  # type: ignore[attr-defined]
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", str(target)])
+        else:
+            subprocess.Popen(["xdg-open", str(target)])
 
 
 def main() -> None: YuLawApp().mainloop()

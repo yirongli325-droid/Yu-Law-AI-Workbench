@@ -23,6 +23,12 @@ jobs:
       - name: Build single-file executable
         shell: pwsh
         run: ./desktop/build-windows.ps1
+
+      - name: Smoke-test packaged executable
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath dist/YuLawWorkbench.exe -ArgumentList "--self-test" -PassThru -Wait
+          if ($process.ExitCode -ne 0) { throw "Packaged executable self-test failed with exit code $($process.ExitCode)" }
       - name: Record SHA-256
         shell: pwsh
         run: |

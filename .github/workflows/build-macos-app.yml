@@ -35,6 +35,7 @@ jobs:
           ARCHITECTURE: ${{ matrix.architecture }}
         run: |
           test -d dist/YuLawWorkbench.app
+          dist/YuLawWorkbench.app/Contents/MacOS/YuLawWorkbench --self-test
           codesign --force --deep --sign - dist/YuLawWorkbench.app
           codesign --verify --deep --strict --verbose=2 dist/YuLawWorkbench.app
           file dist/YuLawWorkbench.app/Contents/MacOS/YuLawWorkbench

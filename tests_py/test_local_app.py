@@ -37,12 +37,12 @@ class LocalAppTests(unittest.TestCase):
 
     def test_history_filter_retry_and_record_only_delete(self):
         with tempfile.TemporaryDirectory() as d:
-            root=Path(d); source=root/"客户 合同.txt"; source.write_text("x"); output=root/"results"; output.mkdir()
+            root=Path(d); source=root/"客户 合同.txt"; source.write_text("x",encoding="utf-8"); output=root/"results"; output.mkdir()
             history=root/"history.json"; history.write_text(json.dumps([{
                 "id":"one","created_at":"2026-08-11T00:00:00Z","tool_id":"board-minutes",
                 "provider":"Codex","instruction":"起草","input_files":[str(source)],
                 "input_file_names":[source.name],"output_directory":str(output),"status":"failed",
-                "error_summary":"退出码 1"}],ensure_ascii=False))
+                "error_summary":"退出码 1"}],ensure_ascii=False),encoding="utf-8")
             runner=TaskRunner(history)
             self.assertEqual(["one"],[item["id"] for item in runner.filtered_history("合同","failed")])
             self.assertEqual("board-minutes",runner.retry_request("one").tool_id)

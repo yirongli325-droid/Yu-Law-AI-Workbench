@@ -1,0 +1,36 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:8518d67e-61a0-4a00-8000-000000000001",
+  "version": 1,
+  "metadata": {
+    "component": { "type": "application", "name": "yu-law-ai-workbench", "version": "0.1.0" },
+    "properties": [
+      { "name": "yu-law:source-of-truth", "value": "package-lock.json" },
+      { "name": "yu-law:scope", "value": "all direct runtime and development dependencies; transitive resolution remains in package-lock.json" }
+    ]
+  },
+  "components": [
+    { "type": "library", "name": "drizzle-orm", "version": "0.45.2", "scope": "required", "purl": "pkg:npm/drizzle-orm@0.45.2", "licenses": [{ "license": { "id": "Apache-2.0" } }] },
+    { "type": "library", "name": "next", "version": "16.2.6", "scope": "required", "purl": "pkg:npm/next@16.2.6", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "react", "version": "19.2.6", "scope": "required", "purl": "pkg:npm/react@19.2.6", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "react-dom", "version": "19.2.6", "scope": "required", "purl": "pkg:npm/react-dom@19.2.6", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@cloudflare/vite-plugin", "version": "1.37.1", "scope": "optional", "purl": "pkg:npm/%40cloudflare/vite-plugin@1.37.1", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@cloudflare/workers-types", "version": "^4.20260515.1", "scope": "optional", "purl": "pkg:npm/%40cloudflare/workers-types@4.20260515.1", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@tailwindcss/postcss", "version": "4.2.1", "scope": "optional", "purl": "pkg:npm/%40tailwindcss/postcss@4.2.1", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@types/node", "version": "22.19.19", "scope": "optional", "purl": "pkg:npm/%40types/node@22.19.19", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@types/react", "version": "19.2.14", "scope": "optional", "purl": "pkg:npm/%40types/react@19.2.14", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@types/react-dom", "version": "19.2.3", "scope": "optional", "purl": "pkg:npm/%40types/react-dom@19.2.3", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@vitejs/plugin-react", "version": "6.0.2", "scope": "optional", "purl": "pkg:npm/%40vitejs/plugin-react@6.0.2", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "@vitejs/plugin-rsc", "version": "0.5.26", "scope": "optional", "purl": "pkg:npm/%40vitejs/plugin-rsc@0.5.26", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "drizzle-kit", "version": "0.31.10", "scope": "optional", "purl": "pkg:npm/drizzle-kit@0.31.10", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "eslint", "version": "9.39.4", "scope": "optional", "purl": "pkg:npm/eslint@9.39.4", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "eslint-config-next", "version": "16.2.6", "scope": "optional", "purl": "pkg:npm/eslint-config-next@16.2.6", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "react-server-dom-webpack", "version": "19.2.6", "scope": "optional", "purl": "pkg:npm/react-server-dom-webpack@19.2.6", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "tailwindcss", "version": "4.2.1", "scope": "optional", "purl": "pkg:npm/tailwindcss@4.2.1", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "typescript", "version": "5.9.3", "scope": "optional", "purl": "pkg:npm/typescript@5.9.3", "licenses": [{ "license": { "id": "Apache-2.0" } }] },
+    { "type": "library", "name": "vinext", "version": "0.0.50", "scope": "optional", "purl": "pkg:npm/vinext@0.0.50", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "vite", "version": "8.0.13", "scope": "optional", "purl": "pkg:npm/vite@8.0.13", "licenses": [{ "license": { "id": "MIT" } }] },
+    { "type": "library", "name": "wrangler", "version": "4.92.0", "scope": "optional", "purl": "pkg:npm/wrangler@4.92.0", "licenses": [{ "expression": "MIT OR Apache-2.0" }] }
+  ]
+}

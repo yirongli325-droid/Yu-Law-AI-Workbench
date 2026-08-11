@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "plan_id": "yu-law-desktop-v1",
+  "pack_version": 1,
+  "required_categories": [
+    "architecture",
+    "build",
+    "install",
+    "unit",
+    "integration",
+    "journey",
+    "ui",
+    "accessibility",
+    "security",
+    "reliability",
+    "recovery",
+    "artifact",
+    "release"
+  ],
+  "evaluator_owned_paths": ["acceptance-plan.json"],
+  "requirements": [
+    {
+      "id": "desktop-shell",
+      "title": "Windows 本地桌面应用",
+      "priority": "P0",
+      "categories": ["architecture", "build", "install"]
+    },
+    {
+      "id": "provider-auth",
+      "title": "官方 Codex 与 Claude Code 订阅接入",
+      "priority": "P0",
+      "categories": ["integration", "security"]
+    },
+    {
+      "id": "tool-catalog",
+      "title": "全量法律工具目录",
+      "priority": "P0",
+      "categories": ["unit", "ui"]
+    },
+    {
+      "id": "skill-runner",
+      "title": "受控 Skill 任务执行",
+      "priority": "P0",
+      "categories": ["integration", "reliability", "recovery"]
+    },
+    {
+      "id": "task-history",
+      "title": "本地任务历史与成果管理",
+      "priority": "P0",
+      "categories": ["unit", "reliability"]
+    },
+    {
+      "id": "safety-boundary",
+      "title": "安全与法律交付边界",
+      "priority": "P0",
+      "categories": ["security"]
+    },
+    {
+      "id": "desktop-ux",
+      "title": "完整桌面体验与可访问性",
+      "priority": "P1",
+      "categories": ["ui", "accessibility"]
+    },
+    {
+      "id": "release-quality",
+      "title": "自动化质量与交付资料",
+      "priority": "P0",
+      "categories": ["build", "artifact", "release"]
+    }
+  ],
+  "checks": [
+    {
+      "id": "desktop-shell-contract",
+      "kind": "command",
+      "category": "architecture",
+      "requirement_ids": ["desktop-shell"],
+      "argv": ["npm", "run", "test:desktop:shell"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "desktop-build",
+      "kind": "command",
+      "category": "build",
+      "requirement_ids": ["desktop-shell"],
+      "argv": ["npm", "run", "build:desktop"],
+      "timeout_ms": 600000
+    },
+    {
+      "id": "release-desktop-build",
+      "kind": "command",
+      "category": "build",
+      "requirement_ids": ["release-quality"],
+      "argv": ["npm", "run", "build:desktop"],
+      "timeout_ms": 600000
+    },
+    {
+      "id": "windows-package",
+      "kind": "command",
+      "category": "install",
+      "requirement_ids": ["desktop-shell"],
+      "argv": ["npm", "run", "package:windows:verify"],
+      "timeout_ms": 600000
+    },
+    {
+      "id": "provider-contract",
+      "kind": "command",
+      "category": "integration",
+      "requirement_ids": ["provider-auth"],
+      "argv": ["npm", "run", "test:desktop:providers"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "catalog-contract",
+      "kind": "command",
+      "category": "unit",
+      "requirement_ids": ["tool-catalog"],
+      "argv": ["npm", "run", "test:desktop:catalog"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "runner-contract",
+      "kind": "command",
+      "category": "integration",
+      "requirement_ids": ["skill-runner"],
+      "argv": ["npm", "run", "test:desktop:runner"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "runner-recovery",
+      "kind": "command",
+      "category": "recovery",
+      "requirement_ids": ["skill-runner"],
+      "argv": ["npm", "run", "test:desktop:recovery"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "runner-reliability",
+      "kind": "command",
+      "category": "reliability",
+      "requirement_ids": ["skill-runner"],
+      "argv": ["npm", "run", "test:desktop:runner"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "history-unit",
+      "kind": "command",
+      "category": "unit",
+      "requirement_ids": ["task-history"],
+      "argv": ["npm", "run", "test:desktop:history"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "history-contract",
+      "kind": "command",
+      "category": "reliability",
+      "requirement_ids": ["task-history"],
+      "argv": ["npm", "run", "test:desktop:history"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "security-boundary",
+      "kind": "command",
+      "category": "security",
+      "requirement_ids": ["safety-boundary"],
+      "argv": ["npm", "run", "test:desktop:security"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "provider-security-boundary",
+      "kind": "command",
+      "category": "security",
+      "requirement_ids": ["provider-auth"],
+      "argv": ["npm", "run", "test:desktop:security"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "desktop-ui",
+      "kind": "command",
+      "category": "ui",
+      "requirement_ids": ["desktop-ux"],
+      "argv": ["npm", "run", "test:desktop:ui"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "catalog-ui",
+      "kind": "command",
+      "category": "ui",
+      "requirement_ids": ["tool-catalog"],
+      "argv": ["npm", "run", "test:desktop:ui"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "desktop-a11y",
+      "kind": "command",
+      "category": "accessibility",
+      "requirement_ids": ["desktop-ux"],
+      "argv": ["npm", "run", "test:desktop:a11y"],
+      "timeout_ms": 300000
+    },
+    {
+      "id": "release-verification",
+      "kind": "command",
+      "category": "release",
+      "requirement_ids": ["release-quality"],
+      "argv": ["npm", "run", "verify:desktop"],
+      "timeout_ms": 900000
+    },
+    {
+      "id": "delivery-docs",
+      "kind": "file",
+      "category": "artifact",
+      "requirement_ids": ["release-quality"],
+      "path": "docs/DESKTOP_DELIVERY.md",
+      "contains": "Windows"
+    }
+  ],
+  "journeys": [
+    {
+      "id": "lawyer-first-task",
+      "title": "律师登录官方提供商并完成首个本地法律 AI 任务",
+      "required": true,
+      "steps": [
+        {
+          "id": "first-task-shell-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["desktop-shell"],
+          "argv": ["npm", "run", "test:desktop:e2e"],
+          "timeout_ms": 600000
+        },
+        {
+          "id": "first-task-provider-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["provider-auth"],
+          "argv": ["npm", "run", "test:desktop:e2e"],
+          "timeout_ms": 600000
+        },
+        {
+          "id": "first-task-catalog-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["tool-catalog"],
+          "argv": ["npm", "run", "test:desktop:e2e"],
+          "timeout_ms": 600000
+        },
+        {
+          "id": "first-task-runner-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["skill-runner"],
+          "argv": ["npm", "run", "test:desktop:e2e"],
+          "timeout_ms": 600000
+        },
+        {
+          "id": "first-task-history-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["task-history"],
+          "argv": ["npm", "run", "test:desktop:e2e"],
+          "timeout_ms": 600000
+        },
+        {
+          "id": "first-task-safety-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["safety-boundary"],
+          "argv": ["npm", "run", "test:desktop:e2e"],
+          "timeout_ms": 600000
+        }
+      ]
+    },
+    {
+      "id": "admin-release",
+      "title": "管理员验证并生成 Windows 交付物",
+      "required": true,
+      "steps": [
+        {
+          "id": "release-shell-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["desktop-shell"],
+          "argv": ["npm", "run", "test:desktop:release"],
+          "timeout_ms": 900000
+        },
+        {
+          "id": "release-safety-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["safety-boundary"],
+          "argv": ["npm", "run", "test:desktop:release"],
+          "timeout_ms": 900000
+        },
+        {
+          "id": "release-quality-e2e",
+          "kind": "command",
+          "category": "journey",
+          "requirement_ids": ["release-quality"],
+          "argv": ["npm", "run", "test:desktop:release"],
+          "timeout_ms": 900000
+        }
+      ]
+    }
+  ]
+}

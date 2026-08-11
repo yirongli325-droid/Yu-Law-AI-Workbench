@@ -1,98 +1,56 @@
-# vinext-starter
+# Yu Law 本地 AI 工作台
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+Yu Law 是面向法律工作者的本地 Windows AI 工作台候选版。仓库包含 Python/Tkinter 桌面壳、法律工具目录、受控官方 CLI 执行、任务历史与可重复的 Windows 打包配置。AI 生成内容是草稿，须由经办律师复核。
 
-## Prerequisites
+## 普通用户：安装与登录
 
-- Node.js `>=22.13.0`
+当前候选版本可生成未签名的 `YuLawWorkbench.exe`。管理员按 [Windows 可重复构建说明](docs/DESKTOP_DELIVERY.md#windows-可重复构建)在可信 Windows 构建机生成并验证后交付。不要运行来源不明的安装脚本。
 
-## Quick Start
+1. 安装官方 Codex CLI 或 Claude Code CLI（可只安装计划使用的一种）。
+2. 在 PowerShell 中运行该 CLI 的官方登录命令，并在官方浏览器页面完成登录。工作台不会要求或保存账号密码、浏览器 Cookie 或令牌。
+3. 启动 `YuLawWorkbench.exe`；本机任务记录默认保存在当前 Windows 用户的本地应用数据目录，限制见交付说明。
 
-```bash
-npm install
-npm run dev
-npm run build
+网页订阅不等同于通用 API 额度。是否可用、使用限制及组织策略以官方 CLI 的实际输出为准。
+
+## 执行首个任务
+
+1. 选择一个标记为可执行的法律 Skill 和已登录的提供商。
+2. 选择输入文件、填写任务说明并选择本地输出目录。
+3. 核对确认页展示的提供商、文件清单和输出位置；只有主动确认后才会外发材料。
+4. 等待任务完成。可在运行中取消；失败或超时后可依据脱敏错误摘要重试。
+
+## 找回成果
+
+任务成功后，从任务结果打开成果文件或成果目录；也可在任务历史中按状态筛选并重新打开。成果默认位于任务选择的输出目录。删除一条历史记录不应删除原始文件或成果文件；文件删除必须另行确认。若界面无法打开成果，复制任务显示的成果路径并在 Windows 文件资源管理器中打开。
+
+## 管理员：验证与故障排查
+
+要求 Node.js `>=22.13.0`。在仓库根目录运行：
+
+```powershell
+npm ci
+npm run verify:desktop
 ```
 
-This starter does not use `wrangler.jsonc`.
+- “未找到官方 CLI”：在同一 Windows 用户和 PATH 下安装 CLI，重新打开终端后检查版本。
+- “未登录/认证失效”：直接运行对应官方 CLI 完成登录，再重试；不要把凭据粘贴进日志或工单。
+- 构建失败：核对 Node.js 版本，使用干净检出和 `npm ci`，并保留不含客户材料的错误输出。
+- 任务超时或取消：确认输出目录可写，缩小输入范围后从历史记录重试。
+- 成果无法打开：确认成果路径仍位于用户批准的目录，且文件未被移动或安全软件隔离。
 
-## Included Shape
+完整步骤见 [桌面候选版交付说明](docs/DESKTOP_DELIVERY.md)。
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+## 隐私与安全
 
-## Workspace Auth Headers
+- 默认本地保存任务元数据、脱敏日志摘要和成果路径；模型处理仍会把确认页列出的文件发送给所选提供商。
+- 不读取、复制或持久化浏览器 Cookie、OAuth 凭据、CLI 登录令牌或账号密码。
+- 日志会过滤敏感信息，但管理员仍应在共享前复核；不要使用真实客户秘密进行构建测试。
+- 仅允许固定的官方提供商命令和已审核 Skill，子进程使用参数数组且不经 Shell 拼接。
+- 所有模型成果必须保留“AI 草稿—须由经办律师复核，不构成最终法律意见”提示。
 
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
+## 开发命令
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+- `npm run build:desktop`：验证 Python/Tkinter 桌面壳与 Windows 打包配置。
+- `npm run verify:desktop`：构建、Lint、全部测试、凭据扫描和交付资料检查。
+- `npm run test:desktop:release`：凭据扫描与发布资料测试。
+- `npm run dev`：启动本地开发服务器（仅开发用途）。

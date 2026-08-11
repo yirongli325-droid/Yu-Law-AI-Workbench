@@ -11,6 +11,8 @@
 
 仓库维护者可以从 GitHub Actions 手动运行 `Build Windows EXE`，在原生 Windows Server 2022 构建机生成单文件 `YuLawWorkbench.exe` 和 `SHA256SUMS.txt`。
 
+`Build macOS App` 会分别在 Apple Silicon 和 Intel 构建机生成对应的 `.dmg`。应用采用临时签名以验证包结构，但没有 Apple Developer ID 公证；首次启动时用户可能需要在“隐私与安全性”中确认打开。
+
 前提：Windows 11 x64、Git、Node.js 22.13.0，以及可联网访问 npm 注册表的构建环境。发布管理员须从交付清单取得受信任仓库 URL 和完整的 40 位 Git 修订号。创建一个不含客户材料的全新临时目录；不要清理或复用日常工作目录。随后在 PowerShell 中执行（替换前两行占位值）：
 
 ```powershell

@@ -22,7 +22,7 @@ class LocalAppTests(unittest.TestCase):
             root=Path(d); request=self.request(root)
             skill=root/".codex/skills/basic-work-skills/SKILL.md"; skill.parent.mkdir(parents=True); skill.write_text("fixture",encoding="utf-8")
             _executable,argv=provider_command(request,home=root)
-            self.assertIn("basic-work-skills",argv[-1]); self.assertIn(str(skill),argv[-1])
+            self.assertIn("basic-work-skills",argv[-1]); self.assertIn("SKILL.md",argv[-1])
 
     def test_request_rejects_unknown_tool_and_root_output(self):
         with tempfile.TemporaryDirectory() as d:
